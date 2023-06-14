@@ -1,0 +1,119 @@
+<form action="makePayment" method="POST">
+    @csrf
+    <div class="modal fade" id="modal-md{{$q->id}}">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Debits for
+                    </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" name="order_id" value="">
+                    <div class="row">
+                        <div class="col col-md-4">
+                            <label>Total Price</label>
+                        </div>
+                        <div class="col col-md-8">
+                            <input type="text" class="form-control" value="" readonly>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col col-md-4">
+                            <label>Quantity</label>
+                        </div>
+                        <div class="col col-md-8">
+                            <input type="text" min="0" class="form-control" value="" readonly>
+                        </div>
+                    </div><br>
+
+                    <div class="row">
+                        <div class="col col-md-4">
+                            <label>Amount</label>
+                        </div>
+                        <div class="col col-md-8">
+                            <input type="number" min="0" class="form-control" name="paid_amount"
+                                placeholder="enter amount paid">
+                        </div>
+                    </div><br>
+
+                    </p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    <button type="submit" name="sell" class="btn btn-primary">Save</button>
+                </div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+</form>
+
+
+public function makePayment(Request $request)
+{
+    $sell=Sell::get();
+    $loan=Debt::with('order')->get();
+    $p = $request->input('order_id');
+    $paidAmount = $request->input('paid_amount');
+
+    $order = Order::find($p);
+    $order->total_amount -= $paidAmount;
+    $order->save();
+
+
+    $debt = Debt::where('order_id', $p)->first();
+
+    if ($debt) {
+        if ($debt->amount >= $paidAmount) {
+            $debt->amount -= $paidAmount;
+            $debt->save();
+    
+            $payment = new Payment();
+            $payment->order_id = $p;
+            $payment->debt_id = $debt->id;
+            $payment->amount = $paidAmount;               
+            $payment->save();
+        } else {
+            $debt->amount <= $paidAmount;
+            // $paidAmount -= $debt->amount;
+            $debt->delete();
+    
+            // $payment = new Payment();
+            // $payment->order_id = $p;
+            // $payment->debt_id = $debt->id;
+            // $payment->amount = $debt->amount;                
+            // $payment->save();
+    
+            // $payment = new Payment();
+            // $payment->order_id = $p;
+            // $payment->debt_id = null;
+            // $payment->amount = $paidAmount;               
+            // $payment->save();
+          
+        }
+    }
+    if ($order && $order->status === 'MKOPO' && $order->total_amount <= 0) {
+        $order->status = 'IMEUZWA';
+        $order->save();
+
+        
+    }
+    // Update the customer status to IMEUZWA
+    $order = Order::find($p);
+    $order->status = 'IMEUZWA';
+    $order->save();
+
+    // Update the product status to IMEUZWA
+    // $sell->order_id = $p;
+    // $sell->status = 'IMEUZWA';
+    // $sell->save();
+  
+return view('layouts.madeni',compact('debt','loan'));
+    // Additional logic and response handling
+}
