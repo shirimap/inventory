@@ -33,7 +33,7 @@
                                     <th>Invoice</th>
                                     <th>Seller</th>
                                     <th>Created_at</th>
-                                    <th>Action</th>
+                                    <th colspan="2">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,23 +93,22 @@
                                     @endforeach
 
 
-                                    <td>
+                                    <td align="right">
                                         @can('generate-invoive')
                                         <a href="{{ route('viewPDF',$sel) }}" target="" class="btn btn-sm btn-warning"><i
                                                 class="fas fa-print"></i></a>
-                                        @endcan
-                                        @can('delete-sell')
-                                        {{--  <a href="{{ route('risiti',$sel) }}" target="" class="btn btn-sm btn-warning"><i
-                                            class="fas fa-print"></i></a> --}}
-                                        <a href="delete/{{$sel}}"
-                                            onclick="return confirm('Are you sure to want to delete it?')"><button
-                                                type="button" class="btn btn-sm btn-danger"><span class="fa fa-trash"
-                                                    aria-hidden="true"
-                                                    style="color: black;font-size:16px;"></span></button></a>
-                                        @endcan
+                                        @endcan                                       
                                     </td>
 
-
+                                    <td align="left">
+                                        @can('delete-sell')
+                                        <form action="delete/{{$sel}}" method="POST" class="delete-form">
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn btn-sm btn-danger delete-button"><i
+                                                    class="fas fa-trash"></i> </button>
+                                        </form>
+                                        @endcan
+                                    </td>
                                 </tr>
                                 @endforeach
 

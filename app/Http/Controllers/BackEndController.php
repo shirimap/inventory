@@ -52,8 +52,8 @@ class BackendController extends Controller
        $date = Carbon::now();
 
        if ($data != null){
-        Alert::error('error','Jina La Tawi Tayari Lipo! Chagua Lingine');
-        return back();
+        
+        return back()->with('error','The name of the branch is already available! Choose another one.');;
        }
 
         $validate = Validator::make($request->all(),[
@@ -67,7 +67,7 @@ class BackendController extends Controller
 
          if ($validate->fails()){
             $messages = $validate->messages();
-            Alert::error('errors','Kuna Kosa wakati wa uwekaji Taarifa');
+            Alert::error('errors','There is an error during data entry');
             return back();
          }
 
@@ -81,33 +81,30 @@ class BackendController extends Controller
             'phoneNumber'=>$request->phone,
             'created_at'=> $date,
         ]);
-        Alert::success('message','Taarifa zimeingia kikamilifu');
+         
+        Alert::success('message','The record has been entered successfully.');
         return back();
        
     }
 
     public function deleteBranch($id){
 
-        $product = Branch::where('id',$id)->delete();
-
+        $product = Branch::where('id',$id)->delete();        
+        return back();
         if ($product){
-            Alert::success('message','Tawi limefutwa kikamilifu');
-            return back();
-           
+             Alert::success("Deleted!","The record has been deleted.", "success");
+            return back();         
 
         }
-        Alert::error('error','Kuna Kosa wakati wa ufutaji wa tawi');
+        Alert::error("Cancelled", "The record was not deleted.", "info");
         return back();
      
     }
 
     public function editBranch(Request $request,$id){
-
         $date = Carbon::now();
-
         $validate = Validator::make($request->all(),[
           'name'=>'required',
-
           'location'=>'required',
       ]);
 
@@ -121,23 +118,21 @@ class BackendController extends Controller
       $branch = Branch::where('id',$id)->update(
           [
           'name'=> $request->name,
-
           'location'=>$request->location,
-            'email'=>$request->email,
-            'address'=>$request->address,
-            'phoneNumber'=>$request->phone,
+          'email'=>$request->email,
+          'address'=>$request->address,
+          'phoneNumber'=>$request->phone,
           'updated_at'=>$date
       ]
   );
-  Alert::success('message','Taarifa zimebadilika kikamilifu');
+  Alert::success('message','The record has been received completely.');
   return back();
 
   }
 
 
-// ==================END=====================
 
-// ==================FUNCTIONS FOR USERS===========
+//==================FUNCTIONS FOR USERS===========
 
   public function createUser(Request $request)
 
@@ -145,7 +140,7 @@ class BackendController extends Controller
         $date = Carbon::now();
         $data = User::where('email', '=' ,$request->email)->first();
         if ($data != null){
-            Alert::error('error','Mfanyakazi Tayari yupo Tafadhali Ongeza Mwingine');
+            Alert::error('error','The worker is already present. Please add another one.');
             return back();
            }
         $validate = Validator::make($request->all(),
@@ -160,15 +155,11 @@ class BackendController extends Controller
             'roles' => 'required'
         ]);
 
-
-
         if ($validate->fails()){
             $messages = $validate->messages();
-            Alert::error('error','Kuna Kosa wakati wa uwekaji Taarifa');
-            return back();
-            
-         }
-
+            Alert::error('error','There is an error during data entry');
+            return back();            
+        }
 
         $user = new User;
         $user->first_name = $request->first_name;
@@ -212,7 +203,7 @@ class BackendController extends Controller
 
         if ($validate->fails()){
             $messages = $validate->messages();
-            Alert::error('error','Kuna Tatizo kwenye uwekaji taarifa');
+            Alert::error('error','There is an error during data entry');
            
          }
         $user = User::find($id);
@@ -229,7 +220,7 @@ class BackendController extends Controller
         $user->save();
         $user->removeRole($user->roles->first()->name);
         $user->assignRole($request->input('roles'));
-        Alert::success('message','Taafifa zimebadilishwa kikamilifu');
+        Alert::success('message','The record has been updated successfully');
         return back();
     }
     public function deleteUser($id){
@@ -237,12 +228,11 @@ class BackendController extends Controller
         $product = User::where('id',$id)->delete();
 
         if ($product){
-            Alert::success('message','Mfanyakazi limefutwa kikamilifu');
-            return back();
-           
+            Alert::success('message','The user has been deleted successfully');
+            return back();           
 
         }
-        Alert::success('error','Kuna Kosa wakati wa ufutaji wa mfanyakazi');
+        Alert::success('error','There was an error during data deletion.');
         return back();
    
 
@@ -261,14 +251,11 @@ class BackendController extends Controller
         {
            $user = Auth::user();
            $user->last_login=$date;
-           $user->save();
-
-
-      
+           $user->save();      
         return redirect('/dashboard')->with('message','login successful');
-    }
-
-    return back()->with('error','Tafadhali Hakiki taarifa zako, Kisha ujaribu tena');
+        }else{
+            return back()->with('error','Please review your record, then try again.');
+        }
         
 
 
@@ -308,8 +295,16 @@ class BackendController extends Controller
 
 public function delete($id)
     {
-        Order::where('id',$id)->delete();
-        return redirect()->back()->with('message','Umefanikiwa Kufuta!');
+        $order = Order::where('id',$id)->delete();
+
+    if ($order){
+        Alert::success('message','The order has been deleted successfully');     
+        return redirect()->back();
+    }
+    Alert::error('error','There is an error during product entry');     
+    return redirect()->back();
+        // Order::where('id',$id)->delete();
+        // return redirect()->back()->with('message','The order has been deleted susccessfully');
    }
 
    public function update(Request $request,$id)
@@ -325,7 +320,7 @@ public function delete($id)
 
             ];
         Sell::find($id)->update($update);
-        Alert::success('message','Taarifa zimebadilika kikamilifu');     
+        Alert::success('message','The record has been entered successfully');     
         return redirect()->back();
      
     }
@@ -427,7 +422,7 @@ public function createProduct(Request $request){
       if ($validate->fails()){
         
          $messages = $validate->messages();
-         Alert::error('message','Kuna Kosa wakati wa uwekaji Taarifa');
+         Alert::error('message','There was an error during data entry');
          return redirect()->back();
       }
         
@@ -478,7 +473,7 @@ public function createProduct(Request $request){
         return redirect()->back(); 
     }
     
-     Alert::success('message','Taarifa zimeingia kikamilifu');
+     Alert::success('message','The record has been entered successfully');
     
      return redirect()->back();
  }
@@ -490,7 +485,7 @@ public function createProduct(Request $request){
 //   dd($path);
 
   Excel::import(new ProductImport, $request->file('file'));
-  Alert::success('message','Taarifa zimebadilika kikamilifu');     
+  Alert::success('message','The record has been uploaded successfully');     
   return redirect()->back();
   
 
@@ -501,10 +496,10 @@ public function createProduct(Request $request){
     $product = Product::where('id',$id)->delete();
 
     if ($product){
-        Alert::success('message','Bidhaa imefutwa kikamilifu');     
+        Alert::success('message','The product has been deleted successfully');     
         return redirect()->back();
     }
-    Alert::error('error','Kuna Kosa wakati wa ufuataji wa Bidhaa');     
+    Alert::error('error','There is an error during product entry');     
     return redirect()->back();
     
 }
@@ -545,7 +540,7 @@ public function editProduct(Request $request, $id){
             $product->updated_at = $date;
             $product->save();
         
-            Alert::success('message','Taarifa zimeingia kikamilifu');     
+            Alert::success('message','The product has been updated successfully');     
             return redirect()->back();
         }
         elseif($product->category_id==2){
@@ -563,11 +558,11 @@ public function editProduct(Request $request, $id){
             $product->updated_at = $date;
             $product->save();
         
-            Alert::success('message','Taarifa zimeingia kikamilifu');     
+            Alert::success('message','The product has been updated successfully');     
             return redirect()->back();
         }
         else{
-            Alert::error('message','Taarifa Zimekosewa');     
+            Alert::error('message','There infomation entered is wrong, Try again!!');     
             return redirect()->back();
         }
         
@@ -588,7 +583,7 @@ public function addToCart(Request $request ,$id) // by this function we add prod
 
     // if cart is empty then this the first product
     if($product->quantity-$request->quantity < 0){
-        Alert::error('error','bidhaa hazitoshi, Tafadhali Ongeza Bidhaa');     
+        Alert::error('error','The product is not enough, Please try to add the stock');     
         return redirect()->back();
         
     }
@@ -619,14 +614,14 @@ public function addToCart(Request $request ,$id) // by this function we add prod
     if(isset($cart[$id])) {
 
         // this code put product of choose in cart
-        Alert::error('error', 'Bidhaa ishawekwa tayari!');     
+        Alert::error('error', 'The product Allready exist.');     
         return redirect()->back();
        
     }
     if(isset($cart[$id]['branch_id'])) {
 
         // this code put product of choose in cart
-        Alert::error('error', 'Matawi hayakosawa Tafadhali chagua bidhaa kwenye tawi Moja');     
+        Alert::error('error', 'The branches are not correct, Please choose one branch');     
         return redirect()->back();
     }
 
@@ -658,19 +653,18 @@ public function updateCart(Request $request)
      {
          $cart = session()->get('cart');
          if($product->quantity-$request->quantity < 0 or $product->total_quantity-$request->sub_quantity < 0){
-            Alert::error('error','bidhaa hazitoshi, Tafadhali Ongeza Bidhaa');
+            Alert::error('error','The product is not enough, Please try to add the stock');
             return back();
         }
          $cart[$request->id]["quantity"] = $request->quantity;
 
          $cart[$request->id]["sub_quantity"] = $request->sub_quantity;
          session()->put('cart', $cart);
-
-         session()->flash('message', 'Cart updated successfully');
-         alert::success('message', 'Mkokoteni Umehaririwa kikamilifu!');
+         
+         alert::success('message', 'Cart updated successfully');
          return redirect()->back();
      }
-     alert::success('message', 'Mkokoteni Umehaririwa kikamilifu!');
+     alert::success('message', 'Cart updated successfully');
      return redirect()->back();
      
  }
@@ -688,10 +682,9 @@ public function updateCart(Request $request)
 
              session()->put('cart', $cart);
          }
-
-         session()->flash('message', 'Bidhaa imetolewa kikamilifu');
-         Alert::success('message', 'Bidhaa imetolewa kikamilifu');
-         return redirect()->back();
+        
+        //session()->flash('message', 'The product removed successfully');
+         return back()->with('message', 'The product removed successfully');
      }
  }
 
@@ -710,7 +703,7 @@ public function updateCart(Request $request)
 
       if ($validate->fails()){
          $messages = $validate->messages();
-         Alert::error('error','Kuna Kosa wakati wa uwekaji Taarifa');
+         Alert::error('error','There is an error during data entry');
          return back();
       }
 
@@ -730,11 +723,13 @@ public function updateCart(Request $request)
      $order->total_amount = $nA;
      $order->created_at = $date;
      $order->save();
+    
      $mi = new MultipleIterator();
      $mi->attachIterator(new ArrayIterator($request->product));
      $mi->attachIterator(new ArrayIterator($request->quantity));
      $mi->attachIterator(new ArrayIterator($request->pprofit));
      $mi->attachIterator(new ArrayIterator($request->amount));
+     
 
      foreach($mi as list($p,$q,$a)){
         $product = Product::find($p);
@@ -768,6 +763,9 @@ public function updateCart(Request $request)
             // $debt -> quantity = $q;                       
             $debt -> amount =$na;                 
             $debt->save();
+            $request->session()->forget('cart');
+            Alert::success('message','The product has been Loaned successfully');
+            return back();
      
      }
      
@@ -798,7 +796,7 @@ public function updateCart(Request $request)
         
         
      $request->session()->forget('cart');
-     Alert::success('message','Taarifa zimeingia kikamilifu');
+     Alert::success('message','The product has been sold successfully');
      return back();
 
   }
@@ -839,9 +837,9 @@ public function addRole(Request $request){
         $role->syncPermissions($permissions);
 
         if ($role){
-            return back()->with('message','Taarifa zimeingia kikamilifu');
+            return back()->with('message','The record has been entered successfully');
         }
-        return back()->with('error','Taarifa zimeingia kikamilifu');
+        return back()->with('error','The record has been entered successfully');
 }
 
 public function deleteRole(Request $request,$id){
@@ -849,9 +847,9 @@ public function deleteRole(Request $request,$id){
 
        $role->delete();
         if ($role){
-            return back()->with('message','Jukumu limefutwa kikamilifu');
+            return back()->with('message','The role has been deleted successfully');
         }
-        return back()->with('error','kunakitu hakiko sawa wakati wa ufutaji');
+        return back()->with('error','There is an error during data deletion');
 }
 
 public function editRole(Request $request,$id){
@@ -864,20 +862,20 @@ public function editRole(Request $request,$id){
     $role->syncPermissions($permissions);
 
     if ($role){
-        return back()->with('message','Taarifa zimeingia kikamilifu');
+        return back()->with('message','The record has been entered successfully');
     }
-    return back()->with('error','Taarifa zimeingia kikamilifu');
+    return back()->with('error','The record has been entered successfully');
 }
 
 public function changepassword(Request $request){
 
 if(!(Hash::check($request->old, Auth::user()->password))){
-    Alert::error('error','Neno lako la siri la zamani si sahihi');
+    Alert::error('error','Your old password is not correct');
     return back(); 
 
 }
 if($request->old == $request->new){
-    Alert::error('error','Neno lako la siri la zamani haliwezi kuwa sawa na jipya');
+    Alert::error('error','The new password cant be the same with old one');
     return back(); 
    
 }
@@ -895,7 +893,7 @@ $user->password = bcrypt($request->new);
 $user->save();
 if($user){
     Auth::logout();
-    Alert::success('message','umefanikiwa Kubadilisha neno la siri, Ingia Tena');
+    Alert::success('message','Your password is successfully changed, Login again');
     return redirect('/');
 }
 
@@ -920,7 +918,7 @@ public function changeinfo(Request $request){
 
     if ($validate->fails()){
         $messages = $validate->messages();
-        Alert::error('error','kuna tatizo kwenye uwekaji taarifa');
+        Alert::error('error','There is an error during data entry');
         return back();        
      }
 
@@ -933,7 +931,7 @@ public function changeinfo(Request $request){
     $user->address = $request->address;
     $user->gender = $request->gender;
     $user->save();
-    Alert::success('message','Taafifa zimebadilishwa kikamilifu');
+    Alert::success('message','The record has been changed successfully');
     return back();
 
 }
@@ -951,7 +949,7 @@ public function makeorder(Request $request){
 
       if ($validate->fails()){
          $messages = $validate->messages();
-         return back()->with('error','Kuna Kosa wakati wa uwekaji Taarifa');
+         return back()->with('error','There is error during data entry!!');
       }
 $na = ($request->total_amount - $request->discount);
 $nA =  $na*(($request->vat)/100);
@@ -1004,7 +1002,7 @@ $nA = $nA+$na;
     //  $product->quantity = $product->quantity - $a;
     //  $product->save();
      $request->session()->forget('cart');
-     Alert::success('message','Taarifa zimeingia kikamilifu');
+     Alert::success('message','The record has been orderd successfully');
      return back();
 
  }
@@ -1023,7 +1021,7 @@ $nA = $nA+$na;
 
       if ($validate->fails()){
          $messages = $validate->messages();
-         Alert::error('error','Kuna Kosa wakati wa uwekaji Taarifa');
+         Alert::error('error','There is error during data entry!!');
          return back();
       }
 $na = ($request->total_amount - $request->discount);
@@ -1061,7 +1059,7 @@ $nA = $nA+$na;
     //  $product->quantity = $product->quantity - $a;
     //  $product->save();
      $request->session()->forget('cart');
-     Alert::success('message','Taarifa zimeingia kikamilifu');
+     Alert::success('message','The record has been entered successfully');
      return back();
 
  }
@@ -1081,7 +1079,7 @@ $nA = $nA+$na;
             Alert::success('message','umefanikiwa');
             return back();
         }
-        Alert::error('error','kunakitu hakiko sawa wakati wa ufutaji');
+        Alert::error('error','There is an error during data deletion');
         return back();
 }
 
@@ -1096,7 +1094,7 @@ public function editOrders(Request $request,$id){
     Alert::success('message','umefanikiwa');
     return back();
     }
-    Alert::error('error','kunakitu hakiko sawa wakati wa ufutaji');
+    Alert::error('error','There is an error during data deletion');
     return back();
 
 }
@@ -1124,7 +1122,7 @@ public function updateShop(Request $request,$id){
           'website'=>$request->website,
            'updated_at'=>$date
         ]);
-        Alert::success('message','Taarifa zimebadilika kikamilifu');
+        Alert::success('message','The infortiona has been changed successfully');
         return back();
         
 }
@@ -1135,7 +1133,7 @@ public function updateShop(Request $request,$id){
         $date = Carbon::now();
  
         if ($data != null){
-            return back()->with('errors','Kuna Kosa wakati wa uwekaji Taarifa');
+            return back()->with('errors','There is error during data entry!!');
         }
  
          $validate = Validator::make($request->all(),[
@@ -1148,7 +1146,7 @@ public function updateShop(Request $request,$id){
  
           if ($validate->fails()){
              $messages = $validate->messages();
-             return back()->with('errors','Kuna Kosa wakati wa uwekaji Taarifa');
+             return back()->with('errors','There is error during data entry!!');
           }
  
  
@@ -1168,8 +1166,8 @@ public function updateShop(Request $request,$id){
             //     'message' => $message
             // ]);   
                 
-        // Alert::success('message','Taarifa zimeingia kikamilifu');
-        return back()->with('message','Taarifa zimeingia kikamilifu');
+        // Alert::success('message','The record has been entered successfully');
+        return back()->with('message','The record has been entered successfully');
         
      }
 
@@ -1234,7 +1232,7 @@ public function createMatumizi(Request $request){
 
       if ($validate->fails()){
          $messages = $validate->messages();
-         Alert::error('errors','Kuna Kosa wakati wa uwekaji Taarifa');
+         Alert::error('errors','There is error during data entry!!');
          return back();
       }
 
@@ -1245,7 +1243,7 @@ public function createMatumizi(Request $request){
      ]);      
                
      
-     Alert::success('message','Taarifa zimeingia kikamilifu');
+     Alert::success('message','The record has been entered successfully');
      return back();
     
  }

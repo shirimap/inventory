@@ -1,7 +1,4 @@
 @include('includes/sidebar')
-@section('bidhaa', 'active')
-@include('sweetalert::alert')
-
 <section class="section">
     <h1 class="section-header">
         <div>Expenses
@@ -221,6 +218,4 @@
     </div>
     <!-- /.modal -->
 </form>
-
-
 @include('includes/footer')

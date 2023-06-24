@@ -33,7 +33,7 @@ Route::get('/',[FrontEndController::class,'showlogin'])->name('showlogin');
 ################ Branch  ################################
 
 
-Route::post('login',[BackEndController::class,'login']);
+Route::post('login',[BackEndController::class,'login'])->name('login');
 
 
 //dont touch from this route  write your routes above this route
@@ -172,31 +172,28 @@ Route::group(['middleware' => 'auth'],function(){
     Route::post('editorders/{id}',[BackEndController::class, 'editorders'])->name('update.order');
     Route::post('updateShop/{id}',[BackEndController::class, 'updateShop'])->name('updateShop');
 
-    Route::post('deleterole/{id}', [BackendController::class, 'deleterole']);
+    
     Route::post('removeProduct/{id}', [BackendController::class, 'removeProduct'])->name('remove');
 
    // Route::post('report',[BackendController::class, 'report'])->name('report');
-    Route::get('delete/{id}',[BackendController::class, 'delete'])->name('delete');
-// ------------------------ delete ------------------------- //
+    Route::post('delete/{id}',[BackendController::class, 'delete'])->name('delete');
+   // ------------------------ delete ------------------------- //
 
 
-Route::post('report',[BackendController::class, 'search'])->name('search');
+    Route::post('report',[BackendController::class, 'search'])->name('search');
 
-Route::post('editRole/{id}',[BackendController::class, 'editRole']);
+    Route::post('editRole/{id}',[BackendController::class, 'editRole']);
 
-Route::get('sidebar',[BackendController::class, 'sidebar']);
-Route::get('order',[FrontEndController::class, 'order'])->name('order');
+    Route::get('sidebar',[BackendController::class, 'sidebar']);
+    Route::get('order',[FrontEndController::class, 'order'])->name('order');
 
-Route::get('/sajilibidhaa', [BackendController::class,'sendSms'])->name('sendSms');
+    Route::get('/sajilibidhaa', [BackendController::class,'sendSms'])->name('sendSms');
 
 
- // this is the router for the expences
- Route::get('matumizi',[FrontEndController::class,'matumizi'])->name('matumizi');
-Route::post('matumizi/create',[BackendController::class,'createMatumizi'])->name('createMatumizi');
-Route::post('matumizi/delete/{id}',[BackendController::class,'deletematumizi']);
-Route::post('matumizi/edit/{id}',[BackendController::class,'editMatumizi']);
-Route::get('/expenses/filter', [BackendController::class, 'filter'])->name('expenses.filter');
+    // this is the router for the expences
+    Route::get('matumizi',[FrontEndController::class,'matumizi'])->name('matumizi');
+    Route::post('matumizi/create',[BackendController::class,'createMatumizi'])->name('createMatumizi');
+    Route::post('matumizi/delete/{id}',[BackendController::class,'deletematumizi']);
+    Route::post('matumizi/edit/{id}',[BackendController::class,'editMatumizi']);
+    Route::get('/expenses/filter', [BackendController::class, 'filter'])->name('expenses.filter');
 });
-
-
-

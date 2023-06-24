@@ -15,7 +15,7 @@
     <ul class="navbar-nav navbar-right">
         <li class="dropdown dropdown-list-toggle"><a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
           <i class="far fa-bell"></i>
-          <span class="badge badge-warning badge-sm navbar-badge">{{ session('outOfStockCount') }}</span>
+          <span class="badge badge-warning badge-sm navbar-badge"><small>{{ session('outOfStockCount') }}</small></span>
         </a>
             <div class="dropdown-menu dropdown-list dropdown-menu-right">
                 <div class="dropdown-header">Notifications

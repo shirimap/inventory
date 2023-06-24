@@ -26,7 +26,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Full Nmae Kamili</th>
+                                    <th>Full Name</th>
                                     <th>Address</th>
                                     <th>Phone Number</th>
                                     <th>Email</th>
@@ -51,16 +51,20 @@
                                     <td>{{ $v }}</td>
                                     @endforeach
                                     <td>
-                                        @can('edit-user')
-                                        <a type="button" class="btn btn-sm btn-primary" style="color:white"
-                                            data-toggle="modal" data-target="#modal-secondary{{ $user->id }}"><span
-                                                class="fa fa-edit"></span></a>
-                                        @endcan
-                                        @can('delete-user')
-                                        <a type="button" class="btn btn-sm btn-danger" style="color:white"
-                                            data-toggle="modal" data-target="#modal-danger{{ $user->id }}"><span
-                                                class="fa fa-trash"></span></a>
-                                        @endcan
+                                        <form action="wauzaji/delete/{{ $user->id }}" method="POST"
+                                            class="delete-form">
+                                            {{ csrf_field() }}
+                                            @method('DELETE')
+                                            @can('edit-user')
+                                            <a type="button" class="btn btn-sm btn-primary" style="color:white"
+                                                data-toggle="modal" data-target="#modal-secondary{{ $user->id }}"><span
+                                                    class="fa fa-edit"></span></a>
+                                            @endcan
+                                            @can('delete-user')
+                                            <button type="submit" class="btn btn-sm btn-danger delete-button"><i
+                                                    class="fas fa-trash"></i></button>
+                                            @endcan
+                                        </form>
                                     </td>
                                     <div class="modal fade" id="modal-danger{{ $user->id }}">
                                         <div class="modal-dialog">
@@ -180,7 +184,7 @@
                                                                 </select>
                                                             </div>
                                                             <div class="col col-md-6">
-                                                                <label>Bramch</label>
+                                                                <label>Branch</label>
                                                                 <select class="form-control" name="branch">
                                                                     <option disabled selected value>--</option>
                                                                     @foreach ($branch as $role)
@@ -266,12 +270,12 @@
                                         </div>
                                         <div class="col col-md-6">
                                             <label>Gender</label>
-                                            <select class="form-control" name="gender">                                                
-                                                <option selected>select gender</option>
-                                                <option value="MALE" selected>MALE
+                                            <select class="form-control" name="gender">
+                                                <option disabled selected value>---</option>
+                                                <option value="MALE">MALE
                                                 </option>
                                                 <option value="FEMALE">FEMALE</option>
-                                                
+
                                             </select>
                                         </div>
                                     </div>
@@ -280,7 +284,7 @@
                                         <div class="col col-md-6">
                                             <label>Role</label>
                                             <select class="form-control" name="roles">
-                                                <option disabled selected value>--</option>
+                                                <option disabled selected value>---</option>
                                                 @foreach ($roles as $role)
                                                 <option value="{{ $role->name }}">{{ $role->name }}</option>
                                                 @endforeach

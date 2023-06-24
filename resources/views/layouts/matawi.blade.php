@@ -45,54 +45,21 @@
                                     <td> {{ $branch->email }}</td>
                                     <td> {{ $branch->user->count()}}</td>
                                     <td>
-                                        @can('edit-branch')
-                                        <a type="button" class="btn btn-sm btn-primary" style="color:white;"
-                                            data-toggle="modal" data-target="#modal-secondary{{ $branch->id }}"><span
-                                                class="fa fa-edit"></span></a>
-                                        @endcan
-                                        @can('delete-branch')
-                                        <button onclick="deleteConfirmation({{ $branch->id }})"
-                                            class="btn btn-danger btn-sm"><span class="fa fa-trash"> </button>
-                                        <form id="delete-form-{{ $branch->id }}" action="matawi/edit/{{ $branch->id }}"
-                                            method="POST" style="display: none;">
-                                            @csrf
-                                            @method('DELETE')
+                                        <form action="matawi/delete/{{ $branch->id }}" method="POST"
+                                            class="delete-form">
+                                            {{ csrf_field() }}
+                                            @can('edit-branch')
+                                            <a type="button" class="btn btn-sm btn-primary" style="color:white;"
+                                                data-toggle="modal"
+                                                data-target="#modal-secondary{{ $branch->id }}"><span
+                                                    class="fa fa-edit"></span></a>
+                                            @endcan
+                                            @can('delete-branch')
+                                            <button type="submit" class="btn btn-sm btn-danger delete-button"><i
+                                                    class="fas fa-trash"></i></button>
+                                            @endcan
                                         </form>
-                                        @endcan
                                     </td>
-                                    <!-- modal -->
-                                    <div class="modal fade" id="modal-danger{{ $branch->id }}">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content bg-danger">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Delete Branch</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="matawi/delete/{{ $branch->id }}">
-                                                        {{ csrf_field() }}
-                                                        @method('DELETE')
-                                                        <input type="hidden" name="proid" value="{{ $branch->id }}">
-                                                        <p>This Branch will be deleted</p>
-                                                </div>
-                                                <div class="modal-footer justify-content-between">
-                                                    <button type="button" class="btn btn-outline-light"
-                                                        data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" name="remove"
-                                                        class="btn btn-outline-light">Delete</button>
-
-                                                </div>
-                                                </form>
-
-
-                                            </div>
-                                            <!-- /.modal-content -->
-                                        </div>
-                                        <!-- /.modal-dialog -->
-                                    </div>
 
                                     <div class="modal fade" id="modal-secondary{{ $branch->id }}">
                                         <div class="modal-dialog modal-lg">

@@ -8,24 +8,6 @@
         </div>
     </h1>
 </section>
-<!--
-<script>
-Swal.fire({
-  title: 'Do you want to save the changes?',
-  showDenyButton: true,
-  showCancelButton: true,
-  confirmButtonText: `Save`,
-  denyButtonText: `Don't save`,
-}).then((result) => {
-  /* Read more about isConfirmed, isDenied below */
-  if (result.isConfirmed) {
-    Swal.fire('Saved!', '', 'success')
-  } else if (result.isDenied) {
-    Swal.fire('Changes are not saved', '', 'info')
-  }
-})
-</script> -->
-
 
 <section>
     <div class="section-body">
@@ -51,7 +33,7 @@ Swal.fire({
                                     <th>Quantity</th>
                                     <th>Threshold</th>
                                     <th>Created_at</th>
-                                    <th colspan="2">Action</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,27 +45,21 @@ Swal.fire({
                                     <td>{{$p->threshold}}</td>
                                     <td>{{$p->created_at}}</td>
                                     <td>
-                                        @can('edit-product')
-                                        <a type="button" class="btn btn-sm btn-primary float-right" style="color:white;"
-                                            data-toggle="modal" data-target="#modal-secondaryy{{ $p->id }}"><i
-                                                class="fas fa-edit"></i></a>
-                                        @endcan
-                                    </td>
-                                    <td>
-                                        @can('delete-product')
                                         <form action="sajilbidhaa/delete/{{ $p->id }}" method="POST"
                                             class="delete-form">
                                             {{ csrf_field() }}
-                                            <button type="submit"
-                                                class="btn btn-sm btn-danger delete-button"><i
-                                                    class="fas fa-trash"></i</button>
+                                            @can('edit-product')
+                                            <a type="button" class="btn btn-sm btn-primary"
+                                                style="color:white;" data-toggle="modal"
+                                                data-target="#modal-secondaryy{{ $p->id }}"><i
+                                                    class="fas fa-edit"></i></a>
+                                            @endcan
+                                            @can('delete-product')
+                                            <button type="submit" class="btn btn-sm btn-danger delete-button"><i
+                                                    class="fas fa-trash"></i></button>
+                                            @endcan
                                         </form>
-
-                                        @endcan
-
                                     </td>
-
-
                                     <div class="modal fade" id="modal-secondaryy{{ $p->id }}">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">

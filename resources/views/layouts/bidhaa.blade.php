@@ -15,17 +15,17 @@
             <div class="col-12 col-md-6 col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"><i class="nav-icon fa fa-th"></i> Products Available 
-                    
-                        @can('add-product')
-                        <button type="button" class="btn btn-secondary float-right" data-toggle="modal"
-                            data-target="#modal-lg-file">
-                            <span class="fa fa-file"></span> Upload File</button>
-                        <button type="button" class="btn btn-success float-right" data-toggle="modal"
-                            data-target="#modal-lg1">
-                            <span class="fa fa-plus"></span> Add Product</button>
-                        @endcan
-                    </h3>                        
+                        <h3 class="card-title"><i class="nav-icon fa fa-th"></i> Products Available
+
+                            @can('add-product')
+                            <button type="button" class="btn btn-secondary float-right" data-toggle="modal"
+                                data-target="#modal-lg-file">
+                                <span class="fa fa-file"></span> Upload File</button>
+                            <button type="button" class="btn btn-success float-right" data-toggle="modal"
+                                data-target="#modal-lg1">
+                                <span class="fa fa-plus"></span> Add Product</button>
+                            @endcan
+                        </h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -102,51 +102,20 @@
                                     <td>{{$p->created_at->format('d-m-Y h:i A') }}</td>
                                     <td>{{$p->updated_at->format('d-m-Y h:i A') }}</td>
                                     <td>
-                                        @can('edit-product')
-                                        <a type="button" class="btn btn-sm btn-primary" style="color:white;"
-                                            data-toggle="modal" data-target="#modal-secondaryy{{ $p->id }}"><i
-                                                class="fas fa-edit"></i></a>
-                                        @endcan
-                                        @can('delete-product')
-                                        <a type="button" class="btn btn-sm btn-danger" style="color:white;"
-                                            data-toggle="modal" data-target="#modal-danger{{ $p->id }}"><i
-                                                class="fa fa-trash"></i></a>
-                                        @endcan
+                                        <form action="bidhaa/delete/{{ $p->id }}" method="POST" class="delete-form">
+                                            {{ csrf_field() }}
+                                            @can('edit-product')
+                                            <a type="button" class="btn btn-sm btn-primary" style="color:white;"
+                                                data-toggle="modal" data-target="#modal-secondaryy{{ $p->id }}"><i
+                                                    class="fas fa-edit"></i></a>
+                                            @endcan
+                                            @can('delete-product')
+                                            <button type="submit" class="btn btn-sm btn-danger delete-button"><i
+                                                    class="fas fa-trash"></i> </button>
+                                            @endcan
+                                        </form>
+
                                     </td>
-                                    <div class="modal fade" id="modal-danger{{ $p->id }}">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content bg-danger">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Delete product</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="bidhaa/delete/{{ $p->id }}">
-                                                        {{ csrf_field() }}
-
-                                                        <input type="hidden" name="proid" value="{{ $p->id }}">
-                                                        <p>Bidhaa Hii itafutwa <b>{{ $p->name }} yenye aina hii
-                                                                {{ $p->type }}
-                                                            </b></p>
-                                                </div>
-                                                <div class="modal-footer justify-content-between">
-                                                    <button type="button" class="btn btn-outline-light"
-                                                        data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" name="remove"
-                                                        class="btn btn-outline-light">Save</button>
-
-                                                </div>
-                                                </form>
-
-
-                                            </div>
-                                            <!-- /.modal-content -->
-                                        </div>
-                                        <!-- /.modal-dialog -->
-                                    </div>
 
                                     <div class="modal fade" id="modal-secondaryy{{ $p->id }}">
                                         <div class="modal-dialog modal-lg">
@@ -236,8 +205,7 @@
                                                                 <label>Quantity(Per each)</label>
                                                                 <input type="number" name="sub_quantity" min="0"
                                                                     step="0.25" value="{{ $p->sub_quantity }}"
-                                                                    class="form-control"
-                                                                    required>
+                                                                    class="form-control" required>
                                                             </div>
 
                                                             @can('add-discount')
@@ -255,15 +223,14 @@
                                                                     required>
                                                             </div>
                                                             @endcan
-                                                            
+
                                                         </div>
                                                         @endif
                                                         <div class="col col-md-6">
-                                                                <label>Discount</label>
-                                                                <input type="number" name="discount"
-                                                                    class="form-control" value="{{ $p->discount }}"
-                                                                    required>
-                                                            </div>
+                                                            <label>Discount</label>
+                                                            <input type="number" name="discount" class="form-control"
+                                                                value="{{ $p->discount }}" required>
+                                                        </div>
                                                 </div>
                                                 <div class="modal-footer justify-content-between">
                                                     <button type="button" class="btn btn-danger"
@@ -344,8 +311,7 @@
                                 </div>
                                 <div class="col col-md-6">
                                     <label>Category</label>
-                                    <select class="form-control" name="category" id="mySelect"
-                                                        onchange="showInput()">
+                                    <select class="form-control" name="category" id="mySelect" onchange="showInput()">
                                         <option disabled selected value>---</option>
                                         @foreach ($categories as $role)
                                         <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -428,14 +394,13 @@
 function showInput() {
     var selectElement = document.getElementById("mySelect");
     var otherInputContainer = document.getElementById("otherInputContainer");
- 
-  
+
+
     if (selectElement.value === "2") {
         otherInputContainer.style.display = "block";
-  
-    }
-    else {
-    otherInputContainer.style.display = "none"; 
+
+    } else {
+        otherInputContainer.style.display = "none";
 
     }
 

@@ -17,8 +17,8 @@ class CreateSellsTable extends Migration
             $table->id();
             $table->String('customer_name')->nullable()->default(NULL);           
             $table->String('phonenumber')->nullable()->default(NULL);           
-            $table->foreignId('product_id')->constrained('products');
-            $table->foreignId('order_id')->constrained('orders');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->float('discount')->default(0);
             $table->float('quantity');
             $table->float('total_amount');

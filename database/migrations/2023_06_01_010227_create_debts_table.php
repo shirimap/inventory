@@ -15,7 +15,7 @@ class CreateDebtsTable extends Migration
     {
         Schema::create('debts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained('orders');
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->float('amount');
             $table->string('status')->default('debt');
             $table->timestamps();

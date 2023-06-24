@@ -15,6 +15,14 @@
 </head>
 
 <body>
+<script>
+        Swal.fire({
+            title: 'Error',
+            text: '{{ session('error') }}',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>
   <div id="app">
     <section class="section">
       <div class="container mt-5">

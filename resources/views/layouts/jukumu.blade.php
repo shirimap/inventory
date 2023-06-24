@@ -65,16 +65,23 @@
                                         <td>{{ $r->getPermissionNames()->count() }}</td>
                                         <td>{{$r->created_at}}</td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                                data-target="#modal-defaultt{{ $r->id }}"> <span
-                                                    class="fa fa-edit"></span></button>
-                                            <button class="btn btn-sm btn-danger" data-toggle="modal"
-                                                data-target="#modal-danger{{ $r->id }}"><span
-                                                    class="fa fa-trash"></span></button>
+
+                                            <form action="editRole/{{ $r->id }}" method="POST" class="delete-form">
+                                                {{ csrf_field() }}
+                                                
+                                                @can('edit-role')
+                                                <a type="button" class="btn btn-sm btn-primary" data-toggle="modal"
+                                                    data-target="#modal-defaultt{{ $r->id }}"> <span
+                                                        class="fa fa-edit"></span></a>
+                                                @endcan
+                                                @can('delete-role')
+                                                <button type="submit" class="btn btn-sm btn-danger delete-button"><i
+                                                        class="fas fa-trash"></i></button>
+                                                @endcan
+                                            </form>
 
                                         </td>
                                     </tr>
-
                                     <div class="modal fade" id="modal-defaultt{{ $r->id }}">
                                         <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
@@ -126,36 +133,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="modal fade" id="modal-danger{{ $r->id }}">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Delete Role</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="deleterole/{{$r->id}}">
-                                                        @csrf
-                                                        <input type="hidden" name="proid" value="">
-                                                        <p>Role will be deleted</p>
-                                                </div>
-                                                <div class="modal-footer justify-content-between">
-                                                    <button type="button" class="btn btn-outline-light"
-                                                        data-dismiss="modal">Cancel</button>
-                                                    <button type="submit" name="remove"
-                                                        class="btn btn-outline-light">Delete</button>
-
-                                                </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    </div>                                   
                                     @endforeach
                                 </tbody>
                             </table>

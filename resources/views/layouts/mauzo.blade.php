@@ -107,7 +107,7 @@
                                     <th>Sell Price</th>
                                     <!-- <th>Punguzo</th> -->
                                     <th>Total</th>
-                                    <th>Action</th>
+                                    <th colspan="2">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -153,18 +153,27 @@
 
                                     </td>
 
-                                    <td>
+                                    <td align="left">
                                         @can('edit-cart')
                                         <button class="btn btn-sm btn-primary" data-toggle="modal"
                                             data-target="#modal-md3{{ $details['id'] }}">
                                             <span class="fa fa-edit"></span></button>
+                                        @endcan                                      
+                                    </td>
+                                    <td align="left">
+                                    @can('delete-cart')
+                                        <form action="deleteCart{{ $details['id'] }}" method="POST" class="delete-form">
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn btn-sm btn-danger delete-button"><i
+                                                    class="fas fa-trash"></i> </button>
+                                        </form>
                                         @endcan
-
                                         @can('delete-cart')
                                         <button action="submit" class="btn btn-sm btn-danger" data-toggle="modal"
                                             data-target="#modal-danger{{ $details['id'] }}"><span
                                                 class="fa fa-trash"></span></button>
                                         @endcan
+
                                     </td>
 
                                     <!-- modal -->
@@ -508,19 +517,17 @@ function showInput() {
     var selectElement = document.getElementById("mySelect");
     var otherInputContainer = document.getElementById("otherInputContainer");
     var dateInputContainer = document.getElementById("dateInputContainer");
-  
+
 
     if (selectElement.value === "MKOPO") {
         otherInputContainer.style.display = "block";
-  
-    }
-      else if(selectElement.value === "BORROW"){
-        dateInputContainer.style.display = "block";   
-      
-      } 
-    else {
-    otherInputContainer.style.display = "none"; 
-    dateInputContainer.style.display = "none"; 
+
+    } else if (selectElement.value === "BORROW") {
+        dateInputContainer.style.display = "block";
+
+    } else {
+        otherInputContainer.style.display = "none";
+        dateInputContainer.style.display = "none";
     }
 
 }
