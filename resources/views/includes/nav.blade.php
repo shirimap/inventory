@@ -13,37 +13,34 @@
         </div>
     </form>
     <ul class="navbar-nav navbar-right">
-        <li class="dropdown dropdown-list-toggle"><a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
-          <i class="far fa-bell"></i>
-          <span class="badge badge-warning badge-sm navbar-badge"><small>{{ session('outOfStockCount') }}</small></span>
-        </a>
+        <li class="dropdown dropdown-list-toggle"><a href="#" data-toggle="dropdown"
+                class="nav-link notification-toggle nav-link-lg">
+                <i class="ion ion-ios-bell-outline"></i>
+                <span class="badge badge-danger navbar-badge">{{ session('outOfStockCount') }}</span>
+                <span class="badge badge-danger beep"></span>
+            </a>
+
             <div class="dropdown-menu dropdown-list dropdown-menu-right">
                 <div class="dropdown-header">Notifications
-                    <div class="float-right">
-                        <a href="#">View All</a>
-                    </div>
                 </div>
                 <div class="dropdown-list-content">
                     @if(Session::has('notification'))
                     @foreach(Session::get('notification') as $product)
                     <a href="#" class="dropdown-item dropdown-item-unread">
-                        <div class="alert alert-warning alert-sm">
-                            <img alt="image" src="../dist/img/avatar/avatar-1.jpeg"
-                                class="rounded-circle dropdown-item-img">
-                            <div class="dropdown-item-desc">
-                                <b> {{ $product->name }}</b> This product is out of stock<b>The remain in stock is
-                                    {{ $product->quantity }}</b>
-                                <div class="time">{{ $product->out_of_stock_at }}</div>
-                            </div>
+                        <img alt="image" src="../dist/img/avatar/avatar-1.jpeg"
+                            class="rounded-circle dropdown-item-img">
+                        <div class="dropdown-item-desc">
+                            <b> {{ $product->name }}</b> This product is out of stock, The remain in stock is
+                            <b>{{ $product->quantity }}</b>
+                            <div class="time">{{ $product->out_of_stock_at }}</div>
                         </div>
                     </a>
                     @endforeach
                     @endif
                 </div>
-
-
             </div>
         </li>
+      
         <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg">
                 <i class="ion ion-android-person d-lg-none"></i>
                 <div class="d-sm-none d-lg-inline-block">Hi, {{ Auth::user()->first_name }} </div>

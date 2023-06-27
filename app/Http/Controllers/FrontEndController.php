@@ -81,7 +81,6 @@ class FrontEndController extends Controller
             $p=Payment::sum('amount'); 
             $s = Order::where('status','IMEUZWA')->sum('total_amount'); 
             $sell=$p+$s; 
-
             $exp = Expense::sum('amount');
             $cash=$sell-$exp;
 
@@ -116,7 +115,7 @@ class FrontEndController extends Controller
             $today= Order::select('total_amount')->whereDate('created_at',$currentDate)->where('status','IMEUZWA')->sum('total_amount');
             $t= Payment::select('amount')->whereDate('created_at',$currentDate)->sum('amount');
             $todaysales=$today+$t;
-            $sales = Sell::selectRaw('YEAR(created_at) as year,MONTH(created_at) AS month,SUM(total_amount) AS total')
+            $sales = Order::selectRaw('YEAR(created_at) as year,MONTH(created_at) AS month,SUM(total_amount) AS total')
                 ->groupBy('year','month')
                 ->get();
         
