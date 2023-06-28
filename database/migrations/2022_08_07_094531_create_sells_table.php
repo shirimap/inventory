@@ -15,14 +15,16 @@ class CreateSellsTable extends Migration
     {
         Schema::create('sells', function (Blueprint $table) {
             $table->id();
-            $table->String('customer_name')->nullable()->default(NULL);           
-            $table->String('phonenumber')->nullable()->default(NULL);           
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
+            $table->String('customer_name')->nullable()->default(NULL);
+            $table->String('address')->nullable()->default(NULL);
+            $table->String('phonenumber')->nullable()->default(NULL);
+            $table->String('TIN')->nullable()->default(NULL);
+            $table->String('VRN')->nullable()->default(NULL);
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->float('discount')->default(0);
             $table->float('quantity');
             $table->float('total_amount');
-            $table->float('profit');
             $table->dateTime('created_at');
             $table->dateTime('updated_at')->nullable()->default(NULL);
         });

@@ -70,8 +70,8 @@
             <div class="card">
                 <div class="card-header">
                     <div class="float-right">
-                        <div class="btn-group">                            
-                            <a href="#" class="btn">Month</a>                            
+                        <div class="btn-group">
+                            <a href="#" class="btn">Month</a>
                         </div>
                     </div>
                     <h4>Statistics</h4>
@@ -108,42 +108,83 @@
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-12 col-12 col-sm-12">
+        <div class="col-lg-3 col-md-3 col-3 col-sm-3">
             <div class="card card-sm-3">
                 <div class="card-icon bg-primary">
                     <i class="ion ion-soup-can"></i>
                 </div>
                 <div class="card-wrap">
                     <div class="card-header">
-                        <h4>Cash Money</h4>
+                        <h4>Cash Amount</h4>
                     </div>
                     <div class="card-body">
                         {{number_format($cash,2)}}
                     </div>
                 </div>
             </div>
-            
+            <div class="card card-sm-3">
+                <div class="card-icon bg-primary">
+                    <i class="ion ion-soup-can"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="card-header">
+                        <h4>Cash Amount</h4>
+                    </div>
+                    <div class="card-body">
+                        {{number_format($cash,2)}}
+                    </div>
+                </div>
+            </div>
+            <div class="card card-sm-3">
+                <div class="card-icon bg-primary">
+                    <i class="ion ion-soup-can"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="card-header">
+                        <h4>Cash Amount</h4>
+                    </div>
+                    <div class="card-body">
+                        {{number_format($cash,2)}}
+                    </div>
+                </div>
+            </div>
+            <div class="card card-sm-3">
+                <div class="card-icon bg-primary">
+                    <i class="ion ion-soup-can"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="card-header">
+                        <h4>Cash Amount</h4>
+                    </div>
+                    <div class="card-body">
+                        {{number_format($cash,2)}}
+                    </div>
+                </div>
+            </div>
+
         </div>
+
     </div>
-   
+
 
 </section>
 <script src="../dist/modules/chart.min.js"></script>
 <script>
 var ctx = document.getElementById("myChart").getContext('2d');
 var myChart = new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: {
         labels: <?php echo json_encode($labels)?>,
+       
         datasets: [{
-            label: 'Statistics',
-            data: <?php echo json_encode($amounts)?>,
-            borderWidth: 1,
-            backgroundColor: 'rgb(87,75,144)',
-            borderColor: 'rgb(87,75,144)',
-            borderWidth: 1,
-            pointBackgroundColor: '#ffffff',
-            pointRadius: 4
+          label: 'Sales',
+          data: <?php echo json_encode($amounts)?>,
+          borderWidth: 2,
+          backgroundColor: 'rgba(220, 53, 69, 1)',
+          borderColor: 'rgba(220, 53, 69, 1)',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#ffffff',
+          pointRadius: 4
         }]
     },
     options: {
@@ -153,17 +194,18 @@ var myChart = new Chart(ctx, {
         scales: {
             yAxes: [{
                 ticks: {
-                    beginAtZero: false,
+                    beginAtZero: true,
                     // stepSize: 150
                 }
             }],
             xAxes: [{
                 gridLines: {
-                    display: false
+                    display: true
                 }
             }]
         },
     }
 });
 </script>
+
 @include('includes/footer')

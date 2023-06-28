@@ -7,20 +7,7 @@
         </div>
     </h1>
 </section>
-@if(session()->has('error'))
-<div class="alert alert-danger alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h5><i class="icon fas fa-check"></i> Error!</h5>
-    <p color="white">{{ session()->get('error') }}
-</div>
-@endif
-@if(session()->has('message'))
-<div class="alert alert-success alert-dismissible">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <h5><i class="icon fas fa-check"></i> Taarifa!</h5>
-    <p color="white">{{ session()->get('message') }}
-</div>
-@endif
+
 <section>
     <div class="section-body">
         <div class="row">

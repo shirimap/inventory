@@ -238,7 +238,8 @@ class BackendController extends Controller
 
 
     }
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $date = Carbon::now()->toDateTimeString();
 
         $validate = Validator::make($request->all(),
@@ -253,10 +254,10 @@ class BackendController extends Controller
            $user->last_login=$date;
            $user->save();      
         return redirect('/dashboard')->with('message','login successful');
-        }else{
-            return back()->with('error','Please review your record, then try again.');
         }
-        
+        else{
+            return back()->with('error','Please review your record, then try again.');
+        }      
 
 
     }
@@ -324,34 +325,17 @@ public function delete($id)
         return redirect()->back();
      
     }
+    
   //The function for the sale_report
-  public function report(Request $request){   
+  public function reports(Request $request){   
     $sell=Sell::get();
     $pd=Product::with('sbidhaa')->get();
     
     $fromDate = $request->input('fromDate');
     $toDate   = $request->input('toDate');
     $p = $request->input('product_id');
-    $role = Role::all();
-  
-  
-    //     ->get();
-    //     $b=Payment::whereBetween('created_at',array($fromDate." 00:00:00",$toDate." 23::59:59"))->sum('amount');
-        
-    //     $pius = Sell::with('product')
-    //     ->whereBetween('created_at', [$fromDate . " 00:00:00", $toDate . " 23:59:59"])
-    //     ->where('status', 'IMEUZWA')
-    //     ->where('product_id', $p)
-    //     ->sum(\DB::raw('total_amount * quantity'));
-    //      // $a = $result->amount;
-    //      // $pius=$a+$b;
-
-    //      $sikup = Sell::where('product_id',$p)      
-    //      ->where('sells.status', 'IMEUZWA')
-    //      ->whereBetween('sells.created_at', [$fromDate." 00:00:00", $toDate." 23::59:59"])              
-    //      ->sum('profit');
-    //      return view('layouts.report',compact('data','pius','sikup','pd'));
-    // }      
+    $role = Role::all();  
+    
     if(count($request->all()) > 0){
         $data=Sell::with('product')
         ->join('products', 'sells.product_id', '=', 'products.id')
@@ -763,6 +747,30 @@ public function updateCart(Request $request)
             // $debt -> quantity = $q;                       
             $debt -> amount =$na;                 
             $debt->save();
+            foreach($mi as list($p,$q,$t,$a)){
+                $product = Product::find($p);
+                $sells = new Sell;
+                $sells->customer_name = $request->customer_name;       
+                $sells->phonenumber = $request->phonenumber;
+                $sells->order_id = $order->id;
+                $sells->status =$request->status;
+                $sells -> product_id = $p;
+                if($product->category_id == 2){
+                $sells->profit=$t*$q;
+                $sells -> quantity = $q;
+                $sells -> total_amount = $a;
+                // $sells->net_amount=$a*$q;
+                $sells->save();
+                }
+                else{
+                    $sells->profit=$t*$q;
+                    $sells -> quantity = $q;
+                    $sells -> total_amount = $a;
+                    // $sells->net_amount=$a*$q;
+                    $sells->save();
+                }          
+               
+           }
             $request->session()->forget('cart');
             Alert::success('message','The product has been Loaned successfully');
             return back();
@@ -1212,9 +1220,8 @@ public function updateShop(Request $request,$id){
           'updated_at'=>$date
       ]
         );
-        // $this->sendSMS();
-  Alert::success('message','Taarifa zimebadilika kikamilifu');
-  return back();
+        
+  return back()->with('message','The product has been updated successfully');
 
   }
 
@@ -1231,20 +1238,18 @@ public function createMatumizi(Request $request){
      ]);
 
       if ($validate->fails()){
-         $messages = $validate->messages();
-         Alert::error('errors','There is error during data entry!!');
-         return back();
+         $messages = $validate->messages();       
+         return back()->with('errors','There is error during data entry!!');
       }
 
      $expenses = Expense::create([
          'description'=> $request->description,
          'amount'=>$request->amount,
          'created_at'=> $date,
-     ]);      
+     ]);     
                
      
-     Alert::success('message','The record has been entered successfully');
-     return back();
+     return back()->with('message','The Expenses has been entered successfully');
     
  }
 
@@ -1270,9 +1275,8 @@ public function createMatumizi(Request $request){
         'updated_at'=>$date
   ]
     );
-   
-    Alert::success('message','Taarifa zimebadilika kikamilifu');
-    return back();
+    
+    return back()->with('message','The Expenses has been updated successfully');
 
 }
 
@@ -1281,13 +1285,11 @@ public function createMatumizi(Request $request){
         $expenses = Expense::where('id',$id)->delete();
 
         if ($expenses){
-            Alert::success('message','Expense imefutwa kikamilifu');
-            return back();
-           
+            
+            return back()->with('message','Expense has been deleted successfully');           
 
         }
-        Alert::error('error','Kuna Kosa wakati wa ufutaji wa Bidhaa');
-        return back();
+        return back()->with('message','There is an error during data deletion');          
      
     }
 
@@ -1360,9 +1362,10 @@ public function createMatumizi(Request $request){
                 $payment->amount = $paidAmount;               
                 $payment->save();
                
-            } else {
-                $paidAmount -= $debt->amount;
-                $debt->delete();        
+            }elseif($paidAmount > $debt->amount) {
+                return back()->with('error','The payment amont is greater than the debt amount,The value must be less or equal to the debt amount');
+            }
+            else {      
         
                 $payment = new Payment();
                 $payment->order_id = $p;
@@ -1370,12 +1373,11 @@ public function createMatumizi(Request $request){
                 $payment->amount = $debt->amount;                
                 $payment->save();
         
-                $payment = new Payment();
-                $payment->order_id = $p;
-                $payment->debt_id = null;
-                $payment->amount = $paidAmount;               
-                $payment->save();
-                
+                // $payment = new Payment();
+                // $payment->order_id = $p;
+                // $payment->debt_id = null;
+                // $payment->amount = $paidAmount;               
+                // $payment->save();            
               
             }
         }
@@ -1383,33 +1385,25 @@ public function createMatumizi(Request $request){
         $order->total_amount -= $paidAmount;
         $order->save();
        
-        if ($order->total_amount == 0) {
+        if ($order->total_amount == 0 && $debt->amount == 0) {
             // Update the status in the order table
             $order->status = 'IMEUZWA';
             $order->save();
         
+           
+            $debt->status = 'PAID';
+            $debt->save();
+
             // Update the status in the sells table
             $sell = Sell::where('order_id', $p)->first();
             $sell->status = 'IMEUZWA';
             $sell->save();
+            // return back()->with('message','The User has paid full debit successfully');
         }
-        Alert::success('message','Taarifa zimebadilika kikamilifu');
-    //return back()->with('success','Kuna Kosa wakati wa ufutaji wa tawi');
-        return view('layouts.madeni',compact('debt','loan'));
-        // Additional logic and response handling
+       
+    return back()->with('message','The payment done successfully');
+        //return view('layouts.madeni',compact('debt','loan'));
+        
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

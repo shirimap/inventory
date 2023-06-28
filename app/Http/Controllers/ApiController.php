@@ -9,11 +9,6 @@ use App\Models\Matumizi;
 use App\Models\Branch;
 use App\Models\Sales;
 use App\Models\Stock;
-use App\Models\Sbidhaa;
-
-use Illuminate\Support\Facades\Http;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Client;
 class ApiController extends Controller
 {
 
@@ -400,115 +395,7 @@ return response()->json(['message'=>'un-successful']);
 
  //---------------------ROLES CRUD----------------------------------------------------------------
 
-    //---------------------sbidhaa CRUD----------------------------------------------------------------
-    public function createsbidhaa(Request $request){
 
-        $validate = Validator::make($request->all(),[
-            'name'=>'required',
-             'type'=>'required',
-             'threshold'=>'required',
-        ]);
-
-         if ($validate->fails()){
-            return response()->json($validate->errors(),422);
-         }
-
-         $sbidhaa = Sbidhaa::create([
-            'name'=> $request->name,
-            'type'=>$request->type,
-            'threshold'=>$request->threshold,
-            'created_at'=> $date,
-        ]);
-        $this->sendSMS();
-        return response()->json($sbidhaa);
-    }
-    private function sendSMS()
-    {
-        $phone_number = 756007671; // Replace with the actual phone number from the product data or other logic
-        $sbidhaa = $this->name;
-        $sms = 'hello new product has being registered';
-        
-
-        $url = 'http://smsportal.imartgroup.co.tz/app/smsapi/index.php?campaign=266&routeid=8&key=36281862404933&type=text&contacts=' . $phone_number . '&senderid=Spring-Tech&msg=' . $sms. '';
-
-        try {
-            $client = new Client();
-            $response = $client->get($url);
-
-            $statusCode = $response->getStatusCode();
-
-            if ($statusCode == 200) {
-                return response()->json(['success' => true, 'message' => 'SMS sent successfully']);
-            } else {
-                return response()->json(['success' => false, 'message' => 'Failed to send SMS']);
-            }
-        } catch (GuzzleException $e) {
-            return response()->json(['success' => false, 'message' => 'Error occurred while sending SMS']);
-        }
-    }
-
-    public function showbidhaa(){
-
-        $sbidhaa = Sbidhaa::all();
-
-        return response()->json($sbidhaa);
-    }
- 
-    public function getbidhaa($id){
-
-        $sbidhaa = Sbidhaa::all();
-
-        if ($sbidhaa)
-        {
-            return response()->json($sbidhaa);
-
-        }
-        return response()->json([
-            "message"=>"Product not found"
-        ]
-    );
-
-    }
-
-    public function editsbidhaa(Request $request,$id){
-
-        $validate = Validator::make($request->all(),[
-            'name'=>'required',
-            'type'=>'required',
-            'threshold'=>'required',
-      ]);
-
-       if ($validate->fails()){
-          return response()->json($validate->errors(),422);
-       }
-
-
-
-      $branch = Branch::where('id',$id)->update(
-          [
-            'name'=> $request->name,
-            'type'=>$request->type,
-            'threshold'=>$request->threshold,
-            'created_at'=> $date,
-      ]
-  );
-      $sbidhaa = Sbidhaa::find($id);
-      return response()->json($sbidhaa);
-  }
-
-  public function deletebidhaa($id){
-
-    $sbidhaa = Sbidhaa::where('id',$id)->delete();
-
-    if ($sbidhaa){
-        return response()->json(['message'=>'successful']);
-
-    }
-
-    return response()->json(['message'=>'un-successful']);
-
-
-}
 
 }
 

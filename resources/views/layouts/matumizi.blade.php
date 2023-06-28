@@ -45,7 +45,6 @@
                     </div>
                 </form>
                 <div class="card">
-
                     <div class="card-header">
                         <h3 class="card-title"><i class="nav-icon fa fa-th"></i> Expenses
                             @can('add-expenses')
@@ -75,17 +74,22 @@
                                     <td>{{ $expense->amount }}</td>
                                     <td>{{ $expense->created_at }}</td>
                                     <td>
-                                        @can('edit-expenses')
-                                        <a type="button" class="btn btn-sm btn-primary" style="color:white;"
-                                            data-toggle="modal" data-target="#modal-secondaryy{{ $expense->id }}"><i
-                                                class="fas fa-edit"></i></a>
-                                        @endcan
-                                        @can('delete-expenses')
-                                        <a type="button" class="btn btn-sm btn-danger" style="color:white;"
-                                            data-toggle="modal" data-target="#modal-danger{{ $expense->id }}"><i
-                                                class="fa fa-trash"></i></a>
+                                        <form action="matumizi/delete/{{ $expense->id }}" method="POST"
+                                            class="delete-form">
+                                            {{ csrf_field() }}
+                                            @can('edit-expenses')
+                                            <a type="button" class="btn btn-sm btn-primary" style="color:white;"
+                                                data-toggle="modal" data-target="#modal-secondaryy{{ $expense->id }}"><i
+                                                    class="fas fa-edit"></i></a>
+                                            @endcan
+                                            @can('delete-expenses')
+                                            <button type="submit" class="btn btn-sm btn-danger delete-button"><i
+                                                    class="fas fa-trash"></i> </button>
+                                            @endcan
+                                        </form>
+
                                     </td>
-                                    @endcan
+                                
                                 </tr>
                                 <div class="modal fade" id="modal-danger{{ $expense->id }}">
                                     <div class="modal-dialog">

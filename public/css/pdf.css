@@ -1,0 +1,30 @@
+body{
+    background-color: #f2f2f2;
+    align-content: center;
+}
+table {
+border-collapse: collapse;
+width: 80%;
+margin-top: 2%;
+margin-bottom: 10px;
+margin-left: 10%;
+border: 1px solid;
+    }
+#info_table{
+    border: 0px;
+}
+td, th{
+    padding: 8px;
+    text-align: left;
+}
+th{
+    border: 1px solid;
+}
+#customer_table td, #invoice_table td, #sign_table td{
+    border-left: 1px solid;
+}
+
+img{
+    width:300px;
+    height:200px
+}

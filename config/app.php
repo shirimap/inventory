@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Africa/Dar_es_Salaam',
 
     /*
     |--------------------------------------------------------------------------
@@ -161,7 +161,12 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        Spatie\Permission\PermissionServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
+        ZanySoft\LaravelPDF\PdfServiceProvider::class,
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+        
+        
 
         /*
          * Package Service Providers...
@@ -170,14 +175,13 @@ return [
         /*
          * Application Service Providers...
          */
-        Spatie\Permission\PermissionServiceProvider::class,
-        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
-
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\NexmoServiceProvider::class,
+        
 
     ],
 
@@ -233,10 +237,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
-        'Permission' => Spatie\Permission\Models\Permission::class,
+        'PDF'=> Barryvdh\DomPDF\Facade::class,
+        'PDF' => ZanySoft\LaravelPDF\Facades\PDF::class,
         'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
-        'PDF' => Barryvdh\DomPDF\Facade::class,
+      
 
     ],
 

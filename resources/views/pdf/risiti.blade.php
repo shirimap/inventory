@@ -81,7 +81,9 @@
 
 
         <div class="invoice-header">
-            <h1>Invoice: 45455</h1>
+            @foreach($s as $q)
+            <h1>Invoice:{{ str_pad( $q['order']['id'],5,'0',STR_PAD_LEFT )}} </h1>
+            @endforeach
             <p>Date: {{ $date->format('D, d M Y h:i A') }}</p>
         </div>
         @endforeach
@@ -89,7 +91,7 @@
         <div class="invoice-body">
             <table class="invoice-table">
                 <thead>
-                    <tr>
+                    <tr style="background:blue; color:white;">
                         <th scope="col">#</th>
                         <th scope="col">Product</th>
                         <th scope="col">Quantity</th>                      
@@ -102,8 +104,7 @@
                         <th>{{ $loop->iteration }}</th>
                         <th> {{ $q['product']['sbidhaa']['name']}}</th>
                         <th> {{ $q['quantity']}} </th>
-                        <th>{{ number_format($q['total_amount'])}} </th>
-                        
+                        <th>{{ number_format($q['total_amount']*$q['quantity'],2)}} </th>                        
                     </tr>
                     @endforeach
                 </tbody>
@@ -125,7 +126,7 @@
         </div>
         @endforeach
         <div class="footer">
-            <b>Thank you for your business!</b>
+            <b>Thanks for your business!</b>
         </div>
     </div>
 </body>

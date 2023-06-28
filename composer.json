@@ -7,14 +7,17 @@
     "require": {
         "php": "^7.3|^8.0",
         "barryvdh/laravel-dompdf": "^2.0",
+        "dompdf/dompdf": "^2.0",
         "fruitcake/laravel-cors": "^2.0",
-        "guzzlehttp/guzzle": "^7.0.1",
+        "guzzlehttp/guzzle": "^7.7",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
-        "realrashid/sweet-alert": "^7.0",
-        "spatie/laravel-permission": "^5.10"
+        "maatwebsite/excel": "*",
+        "realrashid/sweet-alert": "^6.0",
+        "spatie/laravel-permission": "^5.5",
+        "zanysoft/laravel-pdf": "^2.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -28,14 +31,12 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/",
-            "app\\Helpers\\": "app/Helpers/"
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-            
         }
     },
     "scripts": {

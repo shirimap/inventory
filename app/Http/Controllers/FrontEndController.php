@@ -32,7 +32,6 @@ class FrontEndController extends Controller
 
     public function showlogin(){
 
-
         return view('auth.login');
     }
 
@@ -115,17 +114,24 @@ class FrontEndController extends Controller
             $today= Order::select('total_amount')->whereDate('created_at',$currentDate)->where('status','IMEUZWA')->sum('total_amount');
             $t= Payment::select('amount')->whereDate('created_at',$currentDate)->sum('amount');
             $todaysales=$today+$t;
-            $sales = Order::selectRaw('YEAR(created_at) as year,MONTH(created_at) AS month,SUM(total_amount) AS total')
-                ->groupBy('year','month')
-                ->get();
+            
+            $salesa = Order::selectRaw('YEAR(created_at) as year, MONTH(created_at) AS month, SUM(total_amount) AS total')
+            ->where('status', 'IMEUZWA')
+            ->groupBy('year', 'month')
+            ->get();
         
-         
-                $data=[];
-                $labels=[];
-                 foreach($sales as $sale){
-                    $data[]=$sale->total;
-                    $labels[]=Carbon::createFromDate($sale->year,$sale->month)->format('M Y');
-                 }
+        $salesb = Payment::selectRaw('YEAR(created_at) as year, MONTH(created_at) AS month, SUM(amount) AS totals')
+            ->groupBy('year', 'month')
+            ->get();
+        
+        $data = [];
+        $labels = [];
+        
+        foreach ($salesa as $key => $sale) {
+            $data[$key] = $sale->total + ($salesb[$key]->totals ?? 0);
+            $labels[$key] = Carbon::createFromDate($sale->year, $sale->month)->format('M Y');
+        }
+        
                
         
             return view('layouts.dashboard',['labels' => $labels,'amounts' => $data],
@@ -196,7 +202,7 @@ class FrontEndController extends Controller
     }
 
     public function madeni(){
-        $loan=Debt::with('order')->get();
+        $loan=Debt::where('status','debt')->with('order')->get();
         return view('layouts.madeni',compact('loan'));
     }
 
@@ -271,238 +277,107 @@ public function mauzomuuzaji(Request $request)
 
         return view('layouts.printirisiti');
     }
-   //The function for the sale_report
-   public function report(Request $request){   
-    $sell=Sell::get();
-    $pd=Product::with('sbidhaa')->get();
+    public function report(Request $request)
+    {
+        $filter = $request->input('filter');
+        $data = Sell::query();
+
+        if (count($request->all()) > 0 && $filter === 'daily') {
+            $data=Sell::with('product')
+        ->join('products', 'sells.product_id', '=', 'products.id')
+        ->select('sells.product_id', DB::raw('SUM(sells.quantity) as quantity'), DB::raw('SUM(sells.total_amount * sells.quantity) as amount'), DB::raw('SUM(sells.profit) as profit'))
+        ->where('sells.status', 'IMEUZWA')
+        ->whereDate('sells.created_at', today())
+        ->groupBy('sells.product_id')
+        ->get();
+
+        $b=Payment::whereDate('created_at',today())->sum('amount');        
+        $result = Sell::with('product')
+        ->whereDate('created_at', today())
+        ->where('status', 'IMEUZWA')           
+        ->sum(\DB::raw('total_amount * quantity'));
+        $pius = $result+$b;
+
+        $sikup = Sell::with('product')
+       ->whereDate('created_at', today())
+       ->where('status', 'IMEUZWA')          
+       ->sum('profit');
+
+       return view('layouts.report',compact('data','pius','sikup'));
+            //$expenses = $expenses->whereDate('created_at', today());
+        } elseif (count($request->all()) > 0 && $filter === 'monthly') {
+            $data=Sell::with('product')
+            ->join('products', 'sells.product_id', '=', 'products.id')
+            ->select('sells.product_id', DB::raw('SUM(sells.quantity) as quantity'), DB::raw('SUM(sells.total_amount * sells.quantity) as amount'), DB::raw('SUM(sells.profit) as profit'))
+            ->where('sells.status', 'IMEUZWA')
+            ->whereMonth('sells.created_at', today()->format('m'))
+            ->groupBy('sells.product_id')
+            ->get();
+            $b=Payment::whereMonth('created_at',today()->format('m'))->sum('amount');
+        
+            $result = Sell::with('product')
+            ->whereMonth('created_at', today()->format('m'))
+            ->where('status', 'IMEUZWA')           
+            ->sum(\DB::raw('total_amount * quantity'));
+            $pius = $result+$b;
+
+            $sikup = Sell::with('product')
+           ->whereMonth('created_at', today()->format('m'))
+           ->where('status', 'IMEUZWA')          
+           ->sum('profit');
     
-    $fromDate = $request->input('fromDate');
-    $toDate   = $request->input('toDate');
-    $p = $request->input('product_id');
-    $role = Role::all();
+           return view('layouts.report',compact('data','pius','sikup'));
+           // $expenses = $expenses->whereMonth('created_at', today()->format('m'));
+        } elseif ($filter === 'custom') {
+            $startDate = $request->input('start_date');
+            $endDate = $request->input('end_date');
+            $data=Sell::with('product')
+            ->join('products', 'sells.product_id', '=', 'products.id')
+            ->select('sells.product_id', DB::raw('SUM(sells.quantity) as quantity'), DB::raw('SUM(sells.total_amount * sells.quantity) as amount'), DB::raw('SUM(sells.profit) as profit'))
+            ->where('sells.status', 'IMEUZWA')
+            ->whereBetween('sells.created_at', [$startDate." 00:00:00", $endDate." 23:59:59"])
+            ->groupBy('sells.product_id')
+            ->get();
+            $b=Payment::whereBetween('created_at',array($startDate." 00:00:00",$endDate." 23::59:59"))->sum('amount');
+        
+            $result = Sell::with('product')
+            ->whereBetween('created_at', [$startDate." 00:00:00", $endDate." 23:59:59"])
+            ->where('status', 'IMEUZWA')           
+            ->sum(\DB::raw('total_amount * quantity'));
+            $pius = $result+$b;
+           
+            $sikup = Sell::with('product')
+           ->whereBetween('created_at', [$startDate." 00:00:00", $endDate." 23:59:59"])
+           ->where('status', 'IMEUZWA')          
+           ->sum('profit');
+    
+           return view('layouts.report',compact('data','pius','sikup'));
+          // $expenses = $expenses->whereBetween('created_at', [$startDate, $endDate . ' 23:59:59']);
+            
+        }else{
+            $data=Sell::with('product')
+            ->join('products', 'sells.product_id', '=', 'products.id')
+            ->select('sells.product_id', DB::raw('SUM(sells.quantity) as quantity'), DB::raw('SUM(sells.total_amount * sells.quantity) as amount'), DB::raw('SUM(sells.profit) as profit'))
+            ->where('sells.status', 'IMEUZWA')
+            ->groupBy('sells.product_id')
+            ->get();
+
+        //$b=Payment::whereBetween('created_at',array($startDate." 00:00:00",$endDate." 23::59:59"))->sum('amount');
+        
+        $pius = Sell::with('product')
+        ->where('status', 'IMEUZWA')
+        ->sum(\DB::raw('total_amount * quantity'));
+        // $a = $result->amount;
+        // $pius=$a+$b;
+        $sikup = Sell::with('product')
+       ->where('status', 'IMEUZWA')
+       ->sum('profit');
+       return view('layouts.report',compact('data','pius','sikup'));
+          
+        }
+
+    }
   
-        
-
-
-    // if ($request->filled($p) && !$request->filled('fromDate') && !$request->filled('toDate')) {  
-    //     $data=Sell::with('product')
-    //     ->join('products', 'sells.product_id', '=', 'products.id')
-    //     ->select('sells.product_id', DB::raw('SUM(sells.quantity) as quantity'), DB::raw('SUM(sells.total_amount * sells.quantity) as amount'), DB::raw('SUM(sells.profit) as profit'))
-    //     ->where('sells.status', 'IMEUZWA')->where('sells.product_id', $p)
-    //     ->whereBetween('sells.created_at', [$fromDate." 00:00:00", $toDate." 23:59:59"])
-    //     ->groupBy('sells.product_id')
-    //     ->get();          
-       
-    //    $b=Payment::whereBetween('created_at',array($fromDate." 00:00:00",$toDate." 23::59:59"))->sum('amount');
-        
-    //    $pius = Sell::with('product')
-    //     ->whereBetween('created_at', [$fromDate . " 00:00:00", $toDate . " 23:59:59"])
-    //     ->where('status', 'IMEUZWA')
-    //     ->where('product_id', $p)
-    //     ->sum(\DB::raw('total_amount * quantity'));
-    //     // $a = $result->amount;
-    //     // $pius=$a+$b;
-    //     $sikup = Sell::with('product')
-    //    ->whereBetween('created_at', [$fromDate . " 00:00:00", $toDate . " 23:59:59"])
-    //    ->where('status', 'IMEUZWA')
-    //    ->where('product_id', $p)
-    //    ->sum('profit');
-
-        
-    //     return view('layouts.report',compact('data','pius','sikup','pd'));
-        
-    // }
-    // elseif (empty($p) && $request->filled('fromDate') && $request->filled('toDate')) {
-    //     $data=Sell::with('product')
-    //     ->join('products', 'sells.product_id', '=', 'products.id')
-    //     ->select('sells.product_id', DB::raw('SUM(sells.quantity) as quantity'), DB::raw('SUM(sells.total_amount * sells.quantity) as amount'), DB::raw('SUM(sells.profit) as profit'))
-    //     ->where('sells.status', 'IMEUZWA')
-    //     ->whereBetween('sells.created_at', [$fromDate." 00:00:00", $toDate." 23:59:59"])
-    //     ->groupBy('sells.product_id')
-    //     ->get();  
-        
-    //     //$data->where('sells.product_id', $p);
-    //     $b=Payment::whereBetween('created_at',array($fromDate." 00:00:00",$toDate." 23::59:59"))->sum('amount');
-        
-    //     $pius = Sell::with('product')
-    //     ->whereBetween('created_at', [$fromDate . " 00:00:00", $toDate . " 23:59:59"])
-    //     ->where('status', 'IMEUZWA')
-    //     ->where('product_id', $p)
-    //     ->sum(\DB::raw('total_amount * quantity'));
-    //     // $a = $result->amount;
-    //     // $pius=$a+$b;
-    //     $sikup = Sell::with('product')
-    //    ->whereBetween('created_at', [$fromDate . " 00:00:00", $toDate . " 23:59:59"])
-    //    ->where('status', 'IMEUZWA')
-    //    ->where('product_id', $p)
-    //    ->sum('profit');
-
-       
-    //     return view('layouts.report',compact('data','pius','sikup','pd'));
-    // } 
-    // else{
-    //     $data=Sell::with('product')
-    //     ->join('products', 'sells.product_id', '=', 'products.id')
-    //     ->select('sells.product_id', DB::raw('SUM(sells.quantity) as quantity'), DB::raw('SUM(sells.total_amount * sells.quantity) as amount'), DB::raw('SUM(sells.profit) as profit'))
-    //     ->where('sells.status', 'IMEUZWA')
-    //     ->groupBy('sells.product_id')
-    //     ->get();
-    //     $b=Payment::whereBetween('created_at',array($fromDate." 00:00:00",$toDate." 23::59:59"))->sum('amount');
-        
-    //     $pius = Sell::with('product')
-    //     ->whereBetween('created_at', [$fromDate . " 00:00:00", $toDate . " 23:59:59"])
-    //     ->where('status', 'IMEUZWA')
-    //     ->where('product_id', $p)
-    //     ->sum(\DB::raw('total_amount * quantity'));
-    //      // $a = $result->amount;
-    //      // $pius=$a+$b;
-
-    //      $sikup = Sell::where('product_id',$p)      
-    //      ->where('sells.status', 'IMEUZWA')
-    //      ->whereBetween('sells.created_at', [$fromDate." 00:00:00", $toDate." 23::59:59"])              
-    //      ->sum('profit');
-    //      return view('layouts.report',compact('data','pius','sikup','pd'));
-    // }      
-    if(count($request->all()) > 0 && $p){
-        $data=Sell::with('product')
-        ->join('products', 'sells.product_id', '=', 'products.id')
-        ->select('sells.product_id', DB::raw('SUM(sells.quantity) as quantity'), DB::raw('SUM(sells.total_amount * sells.quantity) as amount'), DB::raw('SUM(sells.profit) as profit'))
-        ->where('sells.status', 'IMEUZWA')
-        ->whereBetween('sells.created_at', [$fromDate." 00:00:00", $toDate." 23:59:59"])
-        ->groupBy('sells.product_id')
-        ->get();
-
-        $b=Payment::whereBetween('created_at',array($fromDate." 00:00:00",$toDate." 23::59:59"))->sum('amount');
-        
-        $pius = Sell::with('product')
-        ->whereBetween('created_at', [$fromDate . " 00:00:00", $toDate . " 23:59:59"])
-        ->where('status', 'IMEUZWA')
-        ->where('product_id', $p)
-        ->sum(\DB::raw('total_amount * quantity'));
-        // $a = $result->amount;
-        // $pius=$a+$b;
-        $sikup = Sell::with('product')
-       ->whereBetween('created_at', [$fromDate . " 00:00:00", $toDate . " 23:59:59"])
-       ->where('status', 'IMEUZWA')
-       ->where('product_id', $p)
-       ->sum('profit');
-
-       return view('layouts.report',compact('data','pius','sikup','pd'));
-    }
-    else{
-        $data=Sell::with('product')
-        ->join('products', 'sells.product_id', '=', 'products.id')
-        ->select('sells.product_id', DB::raw('SUM(sells.quantity) as quantity'), DB::raw('SUM(sells.total_amount * sells.quantity) as amount'), DB::raw('SUM(sells.profit) as profit'))
-        ->where('sells.status', 'IMEUZWA')
-        ->groupBy('sells.product_id')
-        ->get();
-        $b=Payment::whereBetween('created_at',array($fromDate." 00:00:00",$toDate." 23::59:59"))->sum('amount');
-        
-        $pius = Sell::with('product')
-        ->where('status', 'IMEUZWA')
-        ->sum(\DB::raw('total_amount * quantity'));
-        // $a = $result->amount;
-        // $pius=$a+$b;
-        $sikup = Sell::with('product')
-       ->where('status', 'IMEUZWA')
-       ->sum('profit');
-       return view('layouts.report',compact('data','pius','sikup','pd'));
-    }
-    
-}
-    
-    //The function for the risiti.html"
-    public function risiti(Request $request,$id){
-        $date = carbon::now();
-
-        $group = [];
-        $order = Order::find($id)->first();
-        $sells = Sell::orderBy('order_id')->get();
-
-
-
-    foreach($sells as $sell){
-            $group[$sell->order->id] = Sell::with(['product','order'])->where('order_id',$id)->get()->groupBy('order_id');
-
-        }
-        $s = Sell::with(['product','order'])->where('order_id',$id)->get();
-        $o = Order::where('id',$id)->get();
-        // dd($sells);
-        return view('pdf.risiti',compact('sells','date','group','s','o'));
-    }
-
-    //The function for the sale_report
-    public function sale_report(){
-        return view('layouts.sale_report');
-    }
-    //The function for the setting
-    public function setting(){
-        return view('layouts.setting');
-    }
-    //The function for the Wateja
-    public function wateja(){
-
-        return view('layouts.wateja');
-    }
-    //The function for the wauzaji
-    public function wauzaji(){
-        $branch = Branch::all();
-        $roles = Role::all();
-        $user = User::whereNotNull('branch_id')->get();
-
-        return view('layouts.wauzaji',compact('branch','roles','user'));
-    }
-    //The function for the welcome
-    public function welcome(){
-        return view('layouts.welcome');
-    }
-    //The function for the logOut
-    public function logOut(){
-        return view('layouts.logOut');
-    }
-    //The function of mauzomuuzaji
-    // public function mauzomuaji(){
-    //     return view('layouts.mauzomuaji');
-    // }
-    public function jukumu()
-    {
-       $permission = Permission::all();
-        $role =Role::with('permissions')->get();
-        // for($i=0; $i<count($role); $i++){
-        //     dd($role[$i]['permissions']);
-        // }
-        // dd($role[$i]['permissions'][$i]['name']);
-
-        return view('layouts.jukumu',compact('permission','role'));
-    }
-
-    public function exportPDF(Request $request)
-    {
-        $fromDate = $request->input('fromDate');
-
-        $toDate   = $request->input('toDate');
-
-        $other    = $request->input('other');
-
-
-        if(count($request->all()) > 0){
-            $pdf = new PDF();
-            $query = Sell::with('product')->select('product_id',DB::raw('sum(quantity) as quantity'),DB::raw('sum(total_amount) as amount'))->groupBy('product_id','created_at')->whereBetween('created_at',array($fromDate." 00:00:00",$toDate." 23::59:59"))->get();
-            $pius =Sell::whereBetween('created_at',array($fromDate." 00:00:00",$toDate." 23::59:59"))->sum('total_amount');
-            $pdf->loadView('layouts.reportPrint',compact('query','pius'));
-            return $pdf->stream('mauzo.pdf');
-
-        }
-        else{
-            $pdf = new PDF();
-            $query = Sell::with('product')->select('product_id',DB::raw('sum(quantity) as quantity'),DB::raw('sum(total_amount) as amount'))->groupBy('product_id','created_at')->whereBetween('created_at',array($fromDate." 00:00:00",$toDate." 23::59:59"))->get();
-            $pius =Sell::whereBetween('created_at',array($fromDate." 00:00:00",$toDate." 23::59:59"))->sum('total_amount');
-            $pdf->loadView('layouts.reportPrint',compact('query','pius'));
-            return $pdf->stream('reportPrint.pdf');
-
-        }
-   }
-
 
    public function generatePDF(Request $request)
    {

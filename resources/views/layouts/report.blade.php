@@ -2,7 +2,7 @@
 @include('sweetalert::alert')
 <section class="section">
     <h1 class="section-header">
-        <div>Debts
+        <div>Report
         </div>
     </h1>
 </section>
@@ -13,51 +13,51 @@
     <div class="section-body">
         <div class="row">
             <div class="col-12 col-md-6 col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <!-- /.form group -->
-                            <div class="col-3">
-                                <!-- Date and time range -->
+                <form method="GET" action="report" class="mb-4">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="filter">Filter:</label>
+                                <select name="filter" id="filter" class="form-control" id="mySelect"
+                                    onchange="showInput()">
+                                    <option value="">All</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="dateInputContainer" style="display: none;">
+                            <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Total Sales:</label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-
-                                        </div>
-                                        <h1><b>{{number_format($pius)}}/=</b></h1>
-                                    </div>
-
+                                    <label for="start_date">Start Date:</label>
+                                    <input type="date" name="start_date" id="start_date_container" class="form-control">
                                 </div>
                             </div>
-                            <!-- /.form group -->
-                            <div class="col-3">
-                                <!-- Date and time range -->
+                            <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Total Profit:</label>
-
-                                    <div class="input-group">
-                                        <h1><b>{{number_format($sikup,2)}}/=</b></h1>
-                                    </div>
-
+                                    <label for="end_date">End Date:</label>
+                                    <input type="date" name="end_date" id="end_date_container" class="form-control">
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="col-md-3">
+
+                            <label for=""><br></label><br>
+                            <button type="submit" class="btn btn-success"><span
+                                    class="fa fa-search"></span>Search</button>
 
 
-                            <div class="col-6">
-                                <label for=""><br></label>
-                                <button type="button" class="btn btn-danger float-right" data-toggle="modal"
-                                    data-target="#modal-lg1"><span class="fa fa-download"></span>Download</button>
-                                <label for=""><br></label>
-                                <button type="button" class="btn btn-success float-right" data-toggle="modal"
-                                    data-target="#modal-lg2"><span class="fa fa-search"></span>Search</button>
-                            </div>
+                            <label for=""><br></label>
+                            <button type="button" class="btn btn-danger float-right" data-toggle="modal"
+                                data-target="#modal-lg1"><span class="fa fa-download"></span>Download</button>
 
                         </div>
 
                     </div>
-                </div>
-                <!-- /.row -->
+                </form>
 
             </div>
         </div>
@@ -69,11 +69,15 @@
             <div class="col-12 col-md-6 col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"><span class="fa fa-file-text-o"></span> Report</h3>
+                        <h3 class="card-title"><span class="fa fa-file-text-o"></span>
+                            <a href="#" class="btn btn-outline-primary">Total-sales {{number_format($pius,2)}}</a><a
+                                href="#" class="btn btn-outline-success">Profit {{number_format($sikup,2)}}</a> <a
+                                href="#" class="btn btn-outline-danger">Debts 12,000</a>
+                        </h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="example1" class="table table-hover">
+                        <table id="example2" class="table table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -118,7 +122,6 @@
         </div>
     </div>
 </section>
-
 
 
 <form method="GET" action="generatePDF">
@@ -196,7 +199,7 @@
 </form>
 
 
-<form method="GET" action="report">
+<form method="GET" action="">
     @csrf
     <div class="modal fade" id="modal-lg2">
         <div class="modal-dialog modal-lg">
@@ -247,12 +250,12 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="far fa-clock"></i></span>
                                     </div>
-                                    <select name="product_id" id="" class="form-control">
+                                    {{--<select name="product_id" id="" class="form-control">
                                         <option value="">All</option>
                                         @foreach($pd as $p)
                                         <option value="{{$p->id}}">{{$p->sbidhaa->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    @endforeach
+                                    </select>--}}
 
                                 </div>
 
@@ -273,5 +276,21 @@
     </div>
     <!-- /.modal -->
 </form>
+<script>
+function showInput() {
+    var selectElement = document.getElementById("mySelect");
+    var otherInputContainer = document.getElementById("otherInputContainer");
+    var dateInputContainer = document.getElementById("dateInputContainer");
 
+
+    if (selectElement.value === "custom") {
+        otherInputContainer.style.display = "block";
+
+    } else {
+        otherInputContainer.style.display = "none";
+        dateInputContainer.style.display = "none";
+    }
+
+}
+</script>
 @include('includes/footer')

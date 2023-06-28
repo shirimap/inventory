@@ -17,7 +17,6 @@ class CreateSbidhaasTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('type');
-            $table->integer('threshold');
             $table->timestamps();
         });
     }

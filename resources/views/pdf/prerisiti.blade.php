@@ -102,11 +102,9 @@
                     <tr>
                         <th>{{ $loop->iteration }}</th>
                         <th>{{ $q['product']['sbidhaa'] ['name']}} </th>
-                        <th>{{$q['product']['sbidhaa'] ['type']}}</th>
-                        
+                        <th>{{$q['product']['sbidhaa'] ['type']}}</th>                        
                         <th>{{ $q['quantity']}}</th>
-                        <th>{{ number_format($q['product']['amount'],2)}}</th>
-
+                        <th>{{ number_format($q['product']['amount']*$q['quantity'],2)}}</th>
                     </tr>
                     @endforeach
                 </tbody>

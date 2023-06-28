@@ -82,10 +82,22 @@ class ProductStockCheck extends Command
             ];
 
             $response = Http::get($url, $params);
+        }
+        else{
+            $phone_number = 756007671; // Replace with the actual phone number to send the SMS
+            $sms = 'MATUMIZI:'. $matumizi.'MADENI:'.$madeni.'MAUZO:'.$pius;
 
-            // Handle the response as needed
-
-            // ...
+            $url = 'http://smsportal.imartgroup.co.tz/app/smsapi/index.php';
+            $params = [
+                'campaign' => 266,
+                'routeid' => 8,
+                'key' => '36281862404933',
+                'type' => 'text',
+                'contacts' => $phone_number,
+                'senderid' => 'Spring-Tech',
+                'msg' => $sms,
+            ];
+            $response = Http::get($url, $params);
         }
     }
 }

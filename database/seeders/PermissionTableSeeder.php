@@ -15,58 +15,37 @@ class PermissionTableSeeder extends Seeder
     public function run()
     {
         $permissions = [
-            'add-product',
-            'view-product',
-            'edit-product',
-            'delete-product',
-
-            'add-branch',
-            'view-branch',
-            'edit-branch',
-            'delete-branch',
-            
-            'add-user',
-            'view-user',
-            'edit-user',
-            'delete-user',
-
-            'add-role',
-            'view-role',
-            'edit-role',
-            'delete-role',
-
-            'add-cart',
-            'view-cart',
-            'edit-cart',
-            'delete-cart',
-
-            'add-discount',
-            
-            'add-sell',
-            'view-sell',
-            'delete-sell',
-            
-
-            'add-order',
-            'edit-order',
-            'delete-order',
-
-            'generate-invoive',
-            'generate-preInvoice',
-            'generate-report',
-
-            'add-debt',
-            'view-debt',
-            'edit-debt',            
-            'delete-debt',
-
-            'add-expenses',
-            'view-expenses',
-            'edit-expenses',            
-            'delete-expenses',
-
-            'user-management',
-            'setting'
+            'ongeza-bidhaa',
+            'futa-bidhaa',
+            'hariri-bidhaa',
+            'ona-bidhaa',
+            'ongeza-tawi',
+            'ona-tawi',
+            'futa-tawi',
+            'hariri-tawi',
+            'ongeza-muuzaji',
+            'ona-muuzaji',
+            'futa-muuzaji',
+            'hariri-muuzaji',
+            'ongeza-jukumu',
+            'futa-jukumu',
+            'hariri-jukumu',
+            'ona-jukumu',
+            'ongeza-mkokoteni',
+            'futa-mkokoteni',
+            'hariri-mkokoteni',
+            'ona-mkokoteni',
+            'ongeza-punguzo',
+            'ona-mauzo',
+            'futa-mauzo',
+            'futa-order',
+            'hariri-order',
+            'ongeza-order',
+            'tengeneza-invoive',
+            'tengeneza-preInvoice',
+            'tengeneza-report',
+            'fanya-mauzo',
+            'wasimamizi-duka',
 
          ];
 
