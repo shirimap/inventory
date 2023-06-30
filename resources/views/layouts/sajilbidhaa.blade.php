@@ -1,7 +1,4 @@
 @include('includes/sidebar')
-@include('sweetalert::Alert')
-
-
 <section class="section">
     <h1 class="section-header">
         <div>Register Product
