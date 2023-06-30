@@ -482,7 +482,25 @@ public function reportPrint(Request $request){
             return view('layouts.reportPrint',compact('query','role','pius'));
         }
 }
-
+    //The function for the wauzaji
+    public function wauzaji(){
+        $branch = Branch::all();
+        $roles = Role::all();
+        $user = User::whereNotNull('branch_id')->get();
+    
+        return view('layouts.wauzaji',compact('branch','roles','user'));
+    }
+    public function jukumu()
+    {
+       $permission = Permission::all();
+        $role =Role::with('permissions')->get();
+        // for($i=0; $i<count($role); $i++){
+        //     dd($role[$i]['permissions']);
+        // }
+        // dd($role[$i]['permissions'][$i]['name']);
+    
+        return view('layouts.jukumu',compact('permission','role'));
+    }
 public function punguzo(){
     $shop =ShopInfo::all();
     return view ('layouts.punguzo',compact('shop'));
