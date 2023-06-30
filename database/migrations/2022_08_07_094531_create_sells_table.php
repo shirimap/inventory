@@ -24,6 +24,7 @@ class CreateSellsTable extends Migration
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->float('discount')->default(0);
             $table->float('quantity');
+            $table->float('profit');
             $table->float('total_amount');
             $table->dateTime('created_at');
             $table->dateTime('updated_at')->nullable()->default(NULL);
