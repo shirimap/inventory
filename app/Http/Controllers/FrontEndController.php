@@ -86,7 +86,7 @@ class FrontEndController extends Controller
             $capital= Product::sum('capital');
             //notification
            
-            $notification = Product::whereColumn('quantity', '<=', 'threshold')
+            $notification = Product::whereColumn('quantity', '<=', '70')
             ->join('sbidhaas', 'products.sbidhaa_id', '=', 'sbidhaas.id')
             ->select('sbidhaas.name', 'products.quantity')
             ->get()->map(function ($product) {
