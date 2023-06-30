@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontEndController;
-use App\Http\Controllers\BackendController;
+use App\Http\Controllers\BackEndController;
 use App\Mail\MyTestEmail;
 use Illuminate\Support\Facades\Mail;
 
@@ -37,7 +37,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('dashboard', [FrontEndController::class, 'dashboard'])->name('dashboard');
     Route::get('index', [FrontEndController::class, 'index']);
 
-    Route::post('/send-sms', [BackendController::class, 'sendSMS']);
+    Route::post('/send-sms', [BackEndController::class, 'sendSMS']);
 
     // Route for the product page
     Route::get('product', [FrontEndController::class, 'product'])->name('product');
@@ -100,9 +100,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Route for sajili bidhaa
     Route::get('sajilbidhaa', [FrontEndController::class, 'sbidhaa'])->name('sajilbidhaa');
-    Route::post('sajilbidhaa/add', [BackendController::class, 'createsbidhaa'])->name('sajilbidhaa.add');
-    Route::post('sajilbidhaa/delete/{id}', [BackendController::class, 'deletesbidhaa']);
-    Route::post('sajilbidhaa/edit/{id}', [BackendController::class, 'editsbidhaa']);
+    Route::post('sajilbidhaa/add', [BackEndController::class, 'createsbidhaa'])->name('sajilbidhaa.add');
+    Route::post('sajilbidhaa/delete/{id}', [BackEndController::class, 'deletesbidhaa']);
+    Route::post('sajilbidhaa/edit/{id}', [BackEndController::class, 'editsbidhaa']);
 
     // Route for welcome
     Route::get('cart', [FrontEndController::class, 'cart']);
@@ -113,63 +113,63 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('exportPDF', [FrontEndController::class, 'exportPDF'])->name('exportPDF');
     Route::get('generatePDF', [FrontEndController::class, 'generatePDF'])->name('generatePDF');
 
-    Route::get('logout', [BackendController::class, 'logout'])->name('logout');
+    Route::get('logout', [BackEndController::class, 'logout'])->name('logout');
 
-    Route::post('matawi/add', [BackendController::class, 'createBranch'])->name('matawi.add');
-    Route::delete('matawi/delete/{id}', [BackendController::class, 'deleteBranch']);
-    Route::post('matawi/edit/{id}', [BackendController::class, 'editBranch']);
+    Route::post('matawi/add', [BackEndController::class, 'createBranch'])->name('matawi.add');
+    Route::delete('matawi/delete/{id}', [BackEndController::class, 'deleteBranch']);
+    Route::post('matawi/edit/{id}', [BackEndController::class, 'editBranch']);
 
-    Route::post('wauzaji/create', [BackendController::class, 'createUser'])->name('wauzaji.create');
-    Route::delete('wauzaji/delete/{id}', [BackendController::class, 'deleteUser']);
-    Route::post('wauzaji/edit/{id}', [BackendController::class, 'editUser']);
+    Route::post('wauzaji/create', [BackEndController::class, 'createUser'])->name('wauzaji.create');
+    Route::delete('wauzaji/delete/{id}', [BackEndController::class, 'deleteUser']);
+    Route::post('wauzaji/edit/{id}', [BackEndController::class, 'editUser']);
 
-    Route::post('bidhaa/create', [BackendController::class, 'createProduct']);
-    Route::post('bidhaa/delete/{id}', [BackendController::class, 'deleteProduct']);
-    Route::post('bidhaa/edit/{id}', [BackendController::class, 'editProduct']);
+    Route::post('bidhaa/create', [BackEndController::class, 'createProduct']);
+    Route::post('bidhaa/delete/{id}', [BackEndController::class, 'deleteProduct']);
+    Route::post('bidhaa/edit/{id}', [BackEndController::class, 'editProduct']);
 
-    Route::post('upload', [BackendController::class, 'upload']);
+    Route::post('upload', [BackEndController::class, 'upload']);
 
-    Route::post('addToCart/{id}', [BackendController::class, 'addToCart']);
-    Route::post('deleteCart', [BackendController::class, 'deleteCart']);
-    Route::post('updateCart', [BackendController::class, 'updateCart']);
+    Route::post('addToCart/{id}', [BackEndController::class, 'addToCart']);
+    Route::post('deleteCart', [BackEndController::class, 'deleteCart']);
+    Route::post('updateCart', [BackEndController::class, 'updateCart']);
 
-    Route::post('mauzo/report', [BackendController::class, 'report'])->name('mauzo.report');
+    Route::post('mauzo/report', [BackEndController::class, 'report'])->name('mauzo.report');
 
-    // Route::post('makePayment',[BackendController::class,'makePayment'])->name('makePayment');
-    Route::post('payment', [BackendController::class, 'payment']);
+    // Route::post('makePayment',[BackEndController::class,'makePayment'])->name('makePayment');
+    Route::post('payment', [BackEndController::class, 'payment']);
 
-    Route::post('checkout', [BackendController::class, 'checkout']);
-    Route::post('makeorder', [BackendController::class, 'makeorder']);
-    Route::get('viewPDF/{id}', [BackendController::class, 'viewPDF'])->name('viewPDF');
-    Route::get('previewPDF/{id}', [BackendController::class, 'previewPDF'])->name('previewPDF');
-    Route::post('addrole', [BackendController::class, 'addrole']);
-    Route::post('changepassword', [BackendController::class, 'changepassword']);
-    Route::post('changeinfo', [BackendController::class, 'changeinfo']);
-    Route::post('deleterole/{id}', [BackendController::class, 'deleterole']);
+    Route::post('checkout', [BackEndController::class, 'checkout']);
+    Route::post('makeorder', [BackEndController::class, 'makeorder']);
+    Route::get('viewPDF/{id}', [BackEndController::class, 'viewPDF'])->name('viewPDF');
+    Route::get('previewPDF/{id}', [BackEndController::class, 'previewPDF'])->name('previewPDF');
+    Route::post('addrole', [BackEndController::class, 'addrole']);
+    Route::post('changepassword', [BackEndController::class, 'changepassword']);
+    Route::post('changeinfo', [BackEndController::class, 'changeinfo']);
+    Route::post('deleterole/{id}', [BackEndController::class, 'deleterole']);
     Route::get('editorder/{id}', [FrontEndController::class, 'editorder'])->name('editorder');
     Route::get('update/{id}', [BackEndController::class, 'update'])->name('updateorder');
     Route::post('editorders/{id}', [BackEndController::class, 'editorders'])->name('update.order');
     Route::post('updateShop/{id}', [BackEndController::class, 'updateShop'])->name('updateShop');
 
-    Route::post('removeProduct/{id}', [BackendController::class, 'removeProduct'])->name('remove');
+    Route::post('removeProduct/{id}', [BackEndController::class, 'removeProduct'])->name('remove');
 
-    Route::post('delete/{id}', [BackendController::class, 'delete'])->name('delete');
+    Route::post('delete/{id}', [BackEndController::class, 'delete'])->name('delete');
 
     // ------------------------ delete ------------------------- //
 
-    Route::post('report', [BackendController::class, 'search'])->name('search');
+    Route::post('report', [BackEndController::class, 'search'])->name('search');
 
-    Route::post('editRole/{id}', [BackendController::class, 'editRole']);
+    Route::post('editRole/{id}', [BackEndController::class, 'editRole']);
 
-    Route::get('sidebar', [BackendController::class, 'sidebar']);
+    Route::get('sidebar', [BackEndController::class, 'sidebar']);
     Route::get('order', [FrontEndController::class, 'order'])->name('order');
 
-    Route::get('/sajilibidhaa', [BackendController::class, 'sendSms'])->name('sendSms');
+    Route::get('/sajilibidhaa', [BackEndController::class, 'sEndSms'])->name('sEndSms');
 
     // Route for expenses
     Route::get('matumizi', [FrontEndController::class, 'matumizi'])->name('matumizi');
-    Route::post('matumizi/create', [BackendController::class, 'createMatumizi'])->name('createMatumizi');
-    Route::post('matumizi/delete/{id}', [BackendController::class, 'deletematumizi']);
-    Route::post('matumizi/edit/{id}', [BackendController::class, 'editMatumizi']);
-    Route::get('/expenses/filter', [BackendController::class, 'filter'])->name('expenses.filter');
+    Route::post('matumizi/create', [BackEndController::class, 'createMatumizi'])->name('createMatumizi');
+    Route::post('matumizi/delete/{id}', [BackEndController::class, 'deletematumizi']);
+    Route::post('matumizi/edit/{id}', [BackEndController::class, 'editMatumizi']);
+    Route::get('/expenses/filter', [BackEndController::class, 'filter'])->name('expenses.filter');
 });
