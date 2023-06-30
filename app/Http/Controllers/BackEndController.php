@@ -453,10 +453,7 @@ public function createProduct(Request $request){
        $product->created_at = $date;
        $product->save();
        }
-    else{
-        Alert::error('message','Hamna kitu');
-        return redirect()->back(); 
-    }
+
     
      Alert::success('message','The record has been entered successfully');
     
