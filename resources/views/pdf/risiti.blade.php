@@ -4,6 +4,7 @@
 <head>
     <title>Invoice</title>
     <style>
+
     body {
         font-family: Arial, sans-serif;
     }
@@ -18,7 +19,7 @@
         margin-bottom: 20px;
     }
 
-   
+
     .invoice-header {
         text-align: right;
         color: ;
@@ -70,7 +71,7 @@
     <div class="container">
         <?php $shop = App\Models\ShopInfo::all() ?>
         @foreach($shop as $shop)
-             
+
         <div class="logo" align="center">
             <img src="dist/img/logo.jpg" style="width:150px;height:100px; border-radius:20px;">
             <h1 align="center">{{ $shop->name }}</h1>
@@ -79,22 +80,22 @@
                 Mob: {{ $shop->mobile1 }},Email:{{ $shop->email}},Web: {{ $shop->website}}</p>
         </div>
 
-
-        <div class="invoice-header">
-            @foreach($s as $q)
-            <h1>Invoice:{{ str_pad( $q['order']['id'],5,'0',STR_PAD_LEFT )}} </h1>
-            @endforeach
-            <p>Date: {{ $date->format('D, d M Y h:i A') }}</p>
-        </div>
         @endforeach
-        @foreach ($o as $o)
+        <div class="invoice-header">
+            @foreach ($o as $o)
+            <h1>Invoice: {{ str_pad( $o->id,5,'0',STR_PAD_LEFT) }}</h1>
+            <p>Date: {{ $date->format('D, d M Y h:i A') }}</p>
+
+        </div>
+
+
         <div class="invoice-body">
             <table class="invoice-table">
                 <thead>
                     <tr style="background:blue; color:white;">
                         <th scope="col">#</th>
                         <th scope="col">Product</th>
-                        <th scope="col">Quantity</th>                      
+                        <th scope="col">Quantity</th>
                         <th scope="col">Total Price</th>
                     </tr>
                 </thead>
@@ -104,7 +105,7 @@
                         <th>{{ $loop->iteration }}</th>
                         <th> {{ $q['product']['sbidhaa']['name']}}</th>
                         <th> {{ $q['quantity']}} </th>
-                        <th>{{ number_format($q['total_amount']*$q['quantity'],2)}} </th>                        
+                        <th>{{ number_format($q['total_amount']*$q['quantity'],2)}} </th>
                     </tr>
                     @endforeach
                 </tbody>

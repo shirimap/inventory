@@ -326,6 +326,7 @@ public function delete($id)
      
     }
     
+    
   //The function for the sale_report
   public function reports(Request $request){   
     $sell=Sell::get();

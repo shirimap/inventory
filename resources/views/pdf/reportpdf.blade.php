@@ -1,9 +1,10 @@
 <html>
 <head>
-    <title>Sales Report</title>
+    <title>sale report</title>
     <style>
     body {
         margin: 10px;
+        font-family: Arial, sans-serif;
     }
 
     .total {
@@ -22,17 +23,13 @@
     .table {
         border-collapse: collapse;
         width: 100%;
-        
     }
 
     .table th,
     .table td {
         border: 1px solid #ddd;
         padding: 8px;
-        font-size: 14px;
-        font-style:bold;
     }
-
 
     .table tr:nth-child(even) {
         background-color: #f2f2f2;
@@ -46,7 +43,7 @@
         padding-top: 12px;
         padding-bottom: 12px;
         text-align: left;
-        background-color: #04aaaa;
+        background-color: blue;
         color: white;
     }
 
@@ -62,12 +59,11 @@
 
     .main-footer {
         padding: 10px;
-        text-align:center;
     }
     </style>
 </head>
 
-<body style="font-size: 7pt">
+<body style="font-size: 9pt">
     <table style="border-collapse:collapse; width:100%">
         <thead>
             <tr>
@@ -102,25 +98,30 @@
                 <td>{{ $q->product->sbidhaa->name }}</td>
                 <td>{{ $q->product->sbidhaa->type }}</td>
                 <td> {{ $q->quantity }} </td>
-                <td>{{ number_format($q->amount,2) }}</td>   
-                <td>{{number_format($q->profit,2)}}</td>             
+                <td align="right">{{ number_format($q->amount,2) }}</td>   
+                <td align="right">{{number_format($q->profit,2)}}</td>             
                 <td> {{ $q->product->branch->name }}</td>
                 <td>{{ $q->product->category->name }}</td>                        
             </tr>
             @endforeach
-        </tbody>       
-    </table>
-   
-    <table align="right">
-        <tr>
-            <td><h1>Debit Paid:</h1> <br><h1>Total Profit:</h1> <br><h1>Total Sales:</h1></td>
-            <td></td>
-            <td><h2>{{number_format($b,2)}} /=</h2> <br><h2>{{number_format($sikup,2)}} /=</h2> <br><h2>{{number_format($pius,2)}} /=</h2></td>            
-        </tr>
-        
-    </table>
-
-    
+            <tr>
+                <td colspan="6" rowspan="3"></td>
+                <td align='right'><b>Debit Paid:</b></td>
+                <td>{{number_format($b,2)}} /=</td>
+            </tr>
+            <tr>
+            
+                <td align='right'><b>Total Profit:</b></td>
+                <td>{{number_format($sikup,2)}} /=</td>
+            </tr>
+            <tr>
+            
+                <td align='right'><b>Total Sales:</b></td>
+                <td>{{number_format($pius,2)}} /=</td>
+            </tr>
+        </tbody>   
+  
+    </table> 
 
     
 </body>

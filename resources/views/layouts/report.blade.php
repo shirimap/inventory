@@ -19,42 +19,42 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label for="filter">Filter:</label>
-                                <select name="filter" id="filter" class="form-control" id="mySelect"
-                                    onchange="showInput()">
+                                <select name="filter" class="form-control" id="mySelect" onchange="showInput()">
                                     <option value="">All</option>
                                     <option value="daily">Daily</option>
                                     <option value="monthly">Monthly</option>
                                     <option value="custom">Custom</option>
+
                                 </select>
                             </div>
                         </div>
-                        <div id="dateInputContainer" style="display: none;">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="start_date">Start Date:</label>
-                                    <input type="date" name="start_date" id="start_date_container" class="form-control">
-                                </div>
+                        <div class="col-md-6" id="otherInputContainer" style="display: none;">
+                        <div class="row">
+                        <div class="form-group col-6">
+                                <label for="start_date">Start Date:</label>
+                                <input type="date" name="start_date" id="start_date_container" class="form-control">
                             </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="end_date">End Date:</label>
-                                    <input type="date" name="end_date" id="end_date_container" class="form-control">
-                                </div>
+                            <div class="form-group col-6">
+                                <label for="end_date">End Date:</label>
+                                <input type="date" name="end_date" id="end_date_container" class="form-control">
                             </div>
                         </div>
+                            
+                        </div>
 
-                        <div class="col-md-3">
-
+                        <div class="row">
+                            <div class="form-group col-6">
                             <label for=""><br></label><br>
-                            <button type="submit" class="btn btn-success"><span
-                                    class="fa fa-search"></span>Search</button>
-
-
+                            <button type="submit" class="btn btn-success"><span  class="fa fa-search"></span>Search</button>
+                            </div>
+                            <div class="form-group col-6">
                             <label for=""><br></label>
                             <button type="button" class="btn btn-danger float-right" data-toggle="modal"
                                 data-target="#modal-lg1"><span class="fa fa-download"></span>Download</button>
 
+                            </div>
                         </div>
+
 
                     </div>
                 </form>
@@ -285,6 +285,7 @@ function showInput() {
 
     if (selectElement.value === "custom") {
         otherInputContainer.style.display = "block";
+        dateInputContainer.style.display = "block";
 
     } else {
         otherInputContainer.style.display = "none";
