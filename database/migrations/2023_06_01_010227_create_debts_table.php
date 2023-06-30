@@ -17,6 +17,7 @@ class CreateDebtsTable extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->float('amount');
+            $table->string('status');
             $table->timestamps();
         });
     }
