@@ -29,7 +29,7 @@ Route::get('/', [FrontEndController::class, 'showlogin'])->name('showlogin');
 
 ################ Branch  ################################
 
-Route::post('login', [BackendController::class, 'login'])->name('login');
+Route::post('login', [BackEndController::class, 'login'])->name('login');
 
 // Don't touch this route; write your routes above this route
 
