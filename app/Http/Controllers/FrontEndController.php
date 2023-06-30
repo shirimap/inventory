@@ -147,17 +147,24 @@ class FrontEndController extends Controller
             $p=Payment::sum('amount'); 
             $s = Order::where('status','IMEUZWA')->sum('total_amount'); 
             $sell=$p+$s; 
-
             $exp = Expense::sum('amount');
             $cash=$sell-$exp;
 
             $capital= Product::sum('capital');
             //notification
            
-            $notification = Product::where('quantity', '<=', 'threshold')
-            ->with('sbidhaa')
-            ->get();
-                      
+            $notification = Product::whereColumn('quantity', '<=', 'threshold')
+            ->join('sbidhaas', 'products.sbidhaa_id', '=', 'sbidhaas.id')
+            ->select('sbidhaas.name', 'products.quantity')
+            ->get()->map(function ($product) {
+                $product->out_of_stock_at = Carbon::parse($product->out_of_stock_at)->format('Y-m-d H:i:s');
+                return $product;
+            });
+            
+            $outOfStockCount = $notification->count();
+            session()->put('outOfStockCount', $outOfStockCount);
+
+            Session::put('notification', $notification);
            
             //faid ya mauzo yote 
             $pprofit= Sell::select('profit')
@@ -174,24 +181,28 @@ class FrontEndController extends Controller
             $today= Order::select('total_amount')->whereDate('created_at',$currentDate)->where('status','IMEUZWA')->sum('total_amount');
             $t= Payment::select('amount')->whereDate('created_at',$currentDate)->sum('amount');
             $todaysales=$today+$t;
-            $a = Sell::selectRaw('YEAR(created_at) as year,MONTH(created_at) AS month,SUM(total_amount) AS total')
-                ->groupBy('year','month')
-                ->get();
-                $b = Payment::selectRaw('YEAR(created_at) as year,MONTH(created_at) AS month,SUM(amount) AS amount')
-                ->groupBy('year','month')
-                ->get();
-                $sales=$a+$b;
-         
-                $data=[];
-                $labels=[];
-                 foreach($sales as $sale){
-                    $data[]=$sale->amount;
-                    $labels[]=Carbon::createFromDate($sale->year,$sale->month)->format('M Y');
-                 }
+            
+            $salesa = Order::selectRaw('YEAR(created_at) as year, MONTH(created_at) AS month, SUM(total_amount) AS total')
+            ->where('status', 'IMEUZWA')
+            ->groupBy('year', 'month')
+            ->get();
+        
+        $salesb = Payment::selectRaw('YEAR(created_at) as year, MONTH(created_at) AS month, SUM(amount) AS totals')
+            ->groupBy('year', 'month')
+            ->get();
+        
+        $data = [];
+        $labels = [];
+        
+        foreach ($salesa as $key => $sale) {
+            $data[$key] = $sale->total + ($salesb[$key]->totals ?? 0);
+            $labels[$key] = Carbon::createFromDate($sale->year, $sale->month)->format('M Y');
+        }
+        
                
         
             return view('layouts.dashboard',['labels' => $labels,'amounts' => $data],
-            compact('user','branch','product','sell','capital','pprofit','data','todaysales','madeni','faida','cash','notification'));
+            compact('user','branch','product','sell','capital','pprofit','data','todaysales','madeni','faida','cash','notification','outOfStockCount'));
         }
 
 
