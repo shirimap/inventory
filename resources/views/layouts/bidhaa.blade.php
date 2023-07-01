@@ -401,7 +401,6 @@ function showInput() {
         otherInputContainer.style.display = "none";
 
     }
-
 }
 </script>
 

@@ -32,7 +32,7 @@
                             <div class="card-header">
                                 <h4>Login</h4>
                                 @if(session()->has('error'))
-                                <div class="alert alert-danger alert-dismissible" style="height:70px; font: 5px;">
+                                <div class="alert alert-danger alert-dismissible" style="height:85px; font: 5px;">
                                     <button type="button" class="btn btn-sm close" data-dismiss="alert"
                                         aria-hidden="true">&times;</button>
                                     <i class="icon fas fa-check"></i> Error!
