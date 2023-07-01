@@ -122,45 +122,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card card-sm-3">
-                <div class="card-icon bg-primary">
-                    <i class="ion ion-soup-can"></i>
-                </div>
-                <div class="card-wrap">
-                    <div class="card-header">
-                        <h4>Cash Amount</h4>
-                    </div>
-                    <div class="card-body">
-                        {{number_format($cash,2)}}
-                    </div>
-                </div>
-            </div>
-            <div class="card card-sm-3">
-                <div class="card-icon bg-primary">
-                    <i class="ion ion-soup-can"></i>
-                </div>
-                <div class="card-wrap">
-                    <div class="card-header">
-                        <h4>Cash Amount</h4>
-                    </div>
-                    <div class="card-body">
-                        {{number_format($cash,2)}}
-                    </div>
-                </div>
-            </div>
-            <div class="card card-sm-3">
-                <div class="card-icon bg-primary">
-                    <i class="ion ion-soup-can"></i>
-                </div>
-                <div class="card-wrap">
-                    <div class="card-header">
-                        <h4>Cash Amount</h4>
-                    </div>
-                    <div class="card-body">
-                        {{number_format($cash,2)}}
-                    </div>
-                </div>
-            </div>
+            
 
         </div>
 
