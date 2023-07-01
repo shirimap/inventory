@@ -431,9 +431,9 @@ public function createProduct(Request $request){
      $product->category_id = $c;
      $product->sbidhaa_id = $request->sbidhaa;
      $product->discount=$request->discount;
-     $product->created_at = $date;   
+     $product->created_at = $date;
+   
      $product->save();
-          return redirect()->back()->with('message','The record has been entered successfully');
      }
      elseif($c==2){
        $product = new Product;      
@@ -452,11 +452,15 @@ public function createProduct(Request $request){
        $product->discount=$request->discount;
        $product->created_at = $date;
        $product->save();
-          return redirect()->back()->with('message','The record has been entered successfully');
        }
-   
-       
+    else{
+        Alert::error('message','Hamna kitu');
+        return redirect()->back(); 
+    }
     
+     Alert::success('message','The record has been entered successfully');
+    
+     return redirect()->back();
  }
 
 
