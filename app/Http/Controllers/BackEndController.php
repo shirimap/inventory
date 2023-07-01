@@ -256,7 +256,7 @@ class BackendController extends Controller
         return redirect('/dashboard')->with('message','login successful');
         }
         else{
-            return back()->with('error','Please review your record, then try again.');
+            return back()->with('error','Incorrect Email or Password,Please then try again.');
         }      
 
 

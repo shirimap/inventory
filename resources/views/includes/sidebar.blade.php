@@ -26,13 +26,16 @@
             </li>
             @can('user-management')
             <li class="menu-header">Shop Management</li>
-            <li>
-                <a href="#" class="has-dropdown"><i class="ion ion-ios-home"></i><span>Shop
+            <li class="{{ Request::is('matawi') || Request::is('jukumu') || Request::is('wauzaji') ? 'active' : '' }}">
+                <a href="#" class="has-dropdown {{ Request::is('matawi') || Request::is('jukumu') || Request::is('wauzaji') ? 'active' : '' }}"><i class="ion ion-ios-home"></i><span>Shop
                         Management</span></a>
                 <ul class="menu-dropdown">
-                    <li><a href="{{ route('matawi') }}"><i class="ion ion-ios-circle-outline"></i> Branch</a></li>
-                    <li><a href="{{ route('jukumu') }}"><i class="ion ion-ios-circle-outline"></i> Roles</a></li>
-                    <li><a href="{{ route('wauzaji') }}"><i class="ion ion-ios-circle-outline"></i> Users</a></li>
+                <li class="{{ Request::is('matawi') ? 'active' : '' }}">
+                        <a href="{{ route('matawi') }}"><i class="ion ion-ios-circle-outline"></i> Branch</a></li>
+                        <li class="{{ Request::is('jukumu') ? 'active' : '' }}">
+                        <a href="{{ route('jukumu') }}"><i class="ion ion-ios-circle-outline"></i> Roles</a></li>
+                        <li class="{{ Request::is('wauzaji') ? 'active' : '' }}">
+                        <a href="{{ route('wauzaji') }}"><i class="ion ion-ios-circle-outline"></i> Users</a></li>
                 </ul>
             </li>
             @endcan

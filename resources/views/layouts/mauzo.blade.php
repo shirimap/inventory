@@ -107,7 +107,7 @@
                                     <th>Sell Price</th>
                                     <!-- <th>Punguzo</th> -->
                                     <th>Total</th>
-                                    <th colspan="2">Action</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -153,26 +153,20 @@
 
                                     </td>
 
-                                    <td align="left">
-                                        @can('edit-cart')
-                                        <button class="btn btn-sm btn-primary" data-toggle="modal"
-                                            data-target="#modal-md3{{ $details['id'] }}">
-                                            <span class="fa fa-edit"></span></button>
-                                        @endcan                                      
-                                    </td>
-                                    <td align="left">
-                                    @can('delete-cart')
-                                        <form action="deleteCart{{ $details['id'] }}" method="POST" class="delete-form">
-                                            {{ csrf_field() }}
-                                            <button type="submit" class="btn btn-sm btn-danger delete-button"><i
-                                                    class="fas fa-trash"></i> </button>
+                                    <td>
+                                        <form method="post" action="deleteCart">
+                                            @csrf
+                                            @can('edit-cart')
+                                            <a class="btn btn-sm btn-primary" data-toggle="modal"
+                                                data-target="#modal-md3{{ $details['id'] }}" style="color:white;">
+                                                <span class="fa fa-edit"></span></a>
+                                            @endcan
+                                            @can('delete-cart')
+                                            <input type="hidden" name="id" value="{{ $details['id'] }}">
+                                            <button action="submit" class="btn btn-sm btn-danger"><span
+                                                    class="fa fa-trash"></span></button>
+                                            @endcan
                                         </form>
-                                        @endcan
-                                        @can('delete-cart')
-                                        <button action="submit" class="btn btn-sm btn-danger" data-toggle="modal"
-                                            data-target="#modal-danger{{ $details['id'] }}"><span
-                                                class="fa fa-trash"></span></button>
-                                        @endcan
 
                                     </td>
 
@@ -308,7 +302,7 @@
                                 <div class="modal-dialog modal-md">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title">Payment</h4>
+                                            <h4 class="modal-title"><i class="fas fa-plus"></i> Payment</h4>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -342,7 +336,7 @@
                                                 <div class="col-sm-8">
                                                     <select name="status" class="form-control" id="mySelect"
                                                         onchange="showInput()" required>
-                                                        <option value="">...</option>
+                                                        <option value="" disable>Select payment</option>
                                                         <option value="IMEUZWA">cash</option>
                                                         <option value="MKOPO">LOAN</option>
                                                         <option value="BORROW">BORROW</option>
@@ -405,7 +399,7 @@
 
                                         </div>
                                         <div class="modal-footer justify-content-between">
-                                            <button type="button" class="btn btn-default"
+                                            <button type="button" class="btn btn-danger"
                                                 data-dismiss="modal">Cancel</button>
                                             <button type="submit" name="sell" class="btn btn-primary">Submit</button>
                                         </div>
@@ -423,7 +417,7 @@
                                 <div class="modal-dialog modal-mdd">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title">Add Order</h4>
+                                            <h4 class="modal-title"><i class="fas fa-plus"></i> Add Order</h4>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -488,7 +482,7 @@
 
                                         </div>
                                         <div class="modal-footer justify-content-between">
-                                            <button type="button" class="btn btn-default"
+                                            <button type="button" class="btn btn-danger"
                                                 data-dismiss="modal">Cancel</button>
                                             <button type="submit" name="sell" class="btn btn-primary">Submit</button>
                                         </div>
