@@ -1,6 +1,4 @@
 @include('includes/sidebar')
-@section('bidhaa', 'active')
-@include('sweetalert::alert')
 
 <section class="section">
     <h1 class="section-header">
